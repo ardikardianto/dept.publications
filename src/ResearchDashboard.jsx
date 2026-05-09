@@ -54,6 +54,21 @@ const themes = ["Linguistics", "Literature", "Translation"];
 const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
 const palette = ["#005baa", "#ffd23f", "#27a875", "#e86f4d", "#7462d8", "#4f8cc9"];
+const indexPalette = {
+  Scopus: "#005baa",
+  EBSCO: "#27a875",
+  Copernicus: "#e86f4d",
+  DOAJ: "#7462d8",
+  ProQuest: "#c99800",
+  "Sinta 2": "#0f766e",
+  "Sinta 3": "#2563eb",
+  "Sinta 4": "#9333ea",
+  "Sinta 5": "#db2777",
+  "Sinta 6": "#ea580c",
+  "Non-Sinta": "#64748b",
+  "International Proceedings": "#16a34a",
+  "National Proceedings": "#b45309",
+};
 
 const researchers = [
   { id: "R-01", name: "Dr. Mira Suryani", role: "Research Lead", theme: "Linguistics", projects: 4, publications: 8, hIndex: 7 },
@@ -878,7 +893,7 @@ function Dashboard({ filteredPublications, filteredResearchers, setActive, actio
           <ResponsiveContainer>
             <PieChart>
               <Pie data={indexData} dataKey="value" nameKey="name" innerRadius={65} outerRadius={100}>
-                {indexData.map((_, index) => <Cell key={index} fill={palette[(index + 2) % palette.length]} />)}
+                {indexData.map((item, index) => <Cell key={item.name} fill={indexPalette[item.name] || palette[index % palette.length]} />)}
               </Pie>
               <Tooltip />
               <Legend />
