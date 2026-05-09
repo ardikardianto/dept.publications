@@ -88,14 +88,6 @@ const grants = [
   { funder: "Teaching Innovation Fund", title: "Assessment Analytics", amount: 95, year: "2025", status: "Funded" },
 ];
 
-const trendData = [
-  { year: "2022", publications: 9, projects: 4, grants: 180 },
-  { year: "2023", publications: 12, projects: 5, grants: 260 },
-  { year: "2024", publications: 16, projects: 6, grants: 310 },
-  { year: "2025", publications: 21, projects: 7, grants: 420 },
-  { year: "2026", publications: 24, projects: 8, grants: 560 },
-];
-
 const nav = [
   { id: "dashboard", label: "Dashboard", icon: Icons.chart },
   { id: "publications", label: "Publications", icon: Icons.book },
@@ -120,6 +112,22 @@ function uniq(items) {
 
 function includes(value, query) {
   return String(value || "").toLowerCase().includes(String(query || "").toLowerCase());
+}
+
+function publicationTrendData(items) {
+  const yearCounts = items.reduce((counts, item) => {
+    const year = Number(item.year);
+    if (Number.isFinite(year)) counts.set(year, (counts.get(year) || 0) + 1);
+    return counts;
+  }, new Map());
+  const currentYear = new Date().getFullYear();
+  const dataYears = [...yearCounts.keys()];
+  const endYear = dataYears.length ? Math.max(currentYear, ...dataYears) : currentYear;
+  const startYear = endYear - 4;
+  return Array.from({ length: 5 }, (_, index) => {
+    const year = startYear + index;
+    return { year: String(year), publications: yearCounts.get(year) || 0 };
+  });
 }
 
 function createPublicationId() {
@@ -658,6 +666,7 @@ function PublicShell({ mode, setMode, children }) {
 
 function LandingPage({ setMode, publications }) {
   const fieldData = themes.map((theme) => ({ name: theme, value: publications.filter((publication) => publication.theme === theme).length })).filter((item) => item.value);
+  const trendData = publicationTrendData(publications);
 
   return (
     <div className="grid min-h-[calc(100vh-12rem)] items-center gap-10 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-16">
@@ -812,6 +821,7 @@ function Dashboard({ filteredPublications, filteredResearchers, setActive, actio
   const internationalJournals = filteredPublications.length - nationalJournals;
   const themeData = themes.map((theme) => ({ name: theme, value: filteredPublications.filter((publication) => publication.theme === theme).length })).filter((item) => item.value);
   const indexData = uniq(filteredPublications.map((publication) => publication.type)).map((type) => ({ name: type, value: filteredPublications.filter((publication) => publication.type === type).length }));
+  const trendData = publicationTrendData(filteredPublications);
 
   return (
     <div className="space-y-6">
