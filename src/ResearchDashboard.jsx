@@ -275,6 +275,14 @@ function indexTone(index) {
   return "blue";
 }
 
+function isNationalJournalIndex(index) {
+  return ["Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6", "Non-Sinta"].includes(index);
+}
+
+function isInternationalJournalIndex(index) {
+  return ["Scopus", "EBSCO", "Copernicus", "DOAJ", "ProQuest"].includes(index);
+}
+
 function canonicalIndex(value) {
   const normalized = String(value || "").trim().toLowerCase();
   if (!normalized) return publicationIndexes[0];
@@ -813,8 +821,8 @@ function OverviewPage({ filteredPublications, filteredResearchers, setActive }) 
 }
 
 function Dashboard({ filteredPublications, filteredResearchers, setActive, actionLabel = "View publications" }) {
-  const nationalJournals = filteredPublications.filter((item) => String(item.type).toLowerCase().includes("sinta")).length;
-  const internationalJournals = filteredPublications.length - nationalJournals;
+  const nationalJournals = filteredPublications.filter((item) => isNationalJournalIndex(item.type)).length;
+  const internationalJournals = filteredPublications.filter((item) => isInternationalJournalIndex(item.type)).length;
   const themeData = themes.map((theme) => ({ name: theme, value: filteredPublications.filter((publication) => publication.theme === theme).length })).filter((item) => item.value);
   const indexData = uniq(filteredPublications.map((publication) => publication.type)).map((type) => ({ name: type, value: filteredPublications.filter((publication) => publication.type === type).length }));
   const trendData = publicationTrendData(filteredPublications);
@@ -824,8 +832,8 @@ function Dashboard({ filteredPublications, filteredResearchers, setActive, actio
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" />
         <Stat label="Authors" value={filteredResearchers.length} icon={Icons.users} note="Contributing department authors" />
-        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta-indexed outputs" tone="amber" />
-        <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus and international outputs" />
+        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 and non-Sinta" tone="amber" />
+        <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
