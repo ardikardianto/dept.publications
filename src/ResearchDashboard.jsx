@@ -550,22 +550,22 @@ function ArticleDetails({ article, onClose }) {
   );
 }
 
-function DashboardTools({ publications, importMessage, onAddArticle, onExport, onImport }) {
+function DashboardTools({ publications, importMessage, canManage, onAddArticle, onExport, onImport, onRequireLogin }) {
   return (
     <Card className="p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">Publication Data</p>
-          <p className="mt-1 text-sm text-[#4f6478]">Import, export, or add article records before connecting Supabase.</p>
+          <p className="mt-1 text-sm text-[#4f6478]">{canManage ? "Import, export, or add article records in Supabase." : "Sign in first to import, add, edit, or delete records."}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#d7e6f7] bg-white px-4 py-2.5 text-sm font-semibold text-[#102f52] transition hover:bg-[#f4f9ff]">
+          <label onClick={(event) => !canManage && (event.preventDefault(), onRequireLogin?.())} className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#d7e6f7] bg-white px-4 py-2.5 text-sm font-semibold text-[#102f52] transition ${canManage ? "cursor-pointer hover:bg-[#f4f9ff]" : "cursor-not-allowed opacity-55"}`}>
             <Icons.upload className="h-4 w-4" />
             Import XLSX
-            <input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onImport} />
+            <input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onImport} disabled={!canManage} />
           </label>
           <Button variant="secondary" onClick={onExport} disabled={!publications.length}><Icons.download className="h-4 w-4" />Export XLSX</Button>
-          <Button onClick={onAddArticle}><Icons.plus className="h-4 w-4" />Add new article</Button>
+          <Button onClick={canManage ? onAddArticle : onRequireLogin} disabled={!canManage}><Icons.plus className="h-4 w-4" />Add new article</Button>
         </div>
       </div>
       {importMessage && <p className={`mt-3 rounded-xl px-3 py-2 text-sm font-semibold ${["Imported", "Added", "Exported", "Updated", "Deleted"].some((word) => importMessage.startsWith(word)) ? "bg-[#dff3e6] text-[#315f45]" : "bg-[#fde2e2] text-[#8a3a3a]"}`}>{importMessage}</p>}
@@ -982,6 +982,7 @@ export default function ResearchDashboard() {
   const filteredResearchers = useMemo(() => researchers.filter((researcher) => (theme === "All fields" || researcher.theme === theme) && [researcher.name, researcher.role, researcher.theme].some((value) => includes(value, query))), [theme, query]);
   const yearOptions = useMemo(() => uniq([...years, ...publications.map((item) => item.year)]).sort((a, b) => String(b).localeCompare(String(a), undefined, { numeric: true })), [publications]);
   const themeOptions = useMemo(() => uniq([...themes, ...publications.map((item) => item.theme)]), [publications]);
+  const canManagePublications = Boolean(userEmail && userEmail !== "Preview mode" && getAccessToken());
 
   useEffect(() => {
     let alive = true;
@@ -1021,6 +1022,7 @@ export default function ResearchDashboard() {
 
   const addArticle = async (article) => {
     try {
+      if (!canManagePublications) throw new Error("Please sign in before adding an article.");
       const saved = await insertResearchPublication(article);
       setPublications((current) => [saved, ...current]);
       setArticleModal(null);
@@ -1033,6 +1035,7 @@ export default function ResearchDashboard() {
 
   const editArticle = async (original, article) => {
     try {
+      if (!canManagePublications) throw new Error("Please sign in before editing an article.");
       const saved = await updateResearchPublication(original.id, article);
       const identity = publicationIdentity(original);
       setPublications((current) => current.map((item) => publicationIdentity(item) === identity ? saved : item));
@@ -1044,6 +1047,10 @@ export default function ResearchDashboard() {
   };
 
   const deleteArticle = async (article) => {
+    if (!canManagePublications) {
+      setImportMessage("Please sign in before deleting an article.");
+      return;
+    }
     const confirmed = window.confirm(`Delete "${article.title}"?`);
     if (!confirmed) return;
     try {
@@ -1058,7 +1065,7 @@ export default function ResearchDashboard() {
 
   const pages = {
     dashboard: <Dashboard filteredPublications={filteredPublications} filteredResearchers={filteredResearchers} setActive={setActive} />,
-    publications: <Publications items={filteredPublications} canManage onEdit={(item) => setArticleModal({ mode: "edit", item })} onDelete={deleteArticle} onSee={setViewArticle} />,
+    publications: <Publications items={filteredPublications} canManage={canManagePublications} onEdit={(item) => setArticleModal({ mode: "edit", item })} onDelete={deleteArticle} onSee={setViewArticle} />,
   };
 
   const exportPublications = async () => {
@@ -1075,6 +1082,7 @@ export default function ResearchDashboard() {
     event.target.value = "";
     if (!file) return;
     try {
+      if (!canManagePublications) throw new Error("Please sign in before importing XLSX data.");
       const sheetRows = await readSheet(file);
       const [headerRow, ...dataRows] = sheetRows;
       const headers = (headerRow || []).map((value) => String(value || "").trim());
@@ -1131,7 +1139,7 @@ export default function ResearchDashboard() {
           <Header active={active} />
           <div className="space-y-6">
             {databaseMessage && <Card className="p-4"><p className="text-sm font-semibold text-[#315577]">{databaseMessage}</p></Card>}
-            {active === "publications" && <DashboardTools publications={publications} importMessage={importMessage} onAddArticle={() => setArticleModal({ mode: "add" })} onExport={exportPublications} onImport={importPublications} />}
+            {active === "publications" && <DashboardTools publications={publications} importMessage={importMessage} canManage={canManagePublications} onAddArticle={() => setArticleModal({ mode: "add" })} onExport={exportPublications} onImport={importPublications} onRequireLogin={() => setImportMessage("Please sign in before changing publication data.")} />}
             <Filters year={year} setYear={setYear} theme={theme} setTheme={setTheme} query={query} setQuery={setQuery} yearOptions={yearOptions} themeOptions={themeOptions} />
             <motion.div key={`${active}-${year}-${theme}-${query}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
               {pages[active] || pages.dashboard}
