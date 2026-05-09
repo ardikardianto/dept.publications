@@ -276,7 +276,7 @@ function indexTone(index) {
 }
 
 function isNationalJournalIndex(index) {
-  return ["Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6", "Non-Sinta"].includes(index);
+  return ["Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6"].includes(index);
 }
 
 function isInternationalJournalIndex(index) {
@@ -832,7 +832,7 @@ function Dashboard({ filteredPublications, filteredResearchers, setActive, actio
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" />
         <Stat label="Authors" value={filteredResearchers.length} icon={Icons.users} note="Contributing department authors" />
-        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 and non-Sinta" tone="amber" />
+        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" tone="amber" />
         <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" />
       </div>
 
