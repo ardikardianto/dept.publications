@@ -234,11 +234,7 @@ async function deleteResearchPublication(id) {
   });
 }
 
-async function replaceResearchPublications(articles) {
-  await supabaseRequest(`/rest/v1/${RESEARCH_PUBLICATIONS_TABLE}?id=neq.00000000-0000-0000-0000-000000000000`, {
-    method: "DELETE",
-    headers: supabaseHeaders(),
-  });
+async function appendResearchPublications(articles) {
   if (!articles.length) return [];
   const rows = await supabaseRequest(`/rest/v1/${RESEARCH_PUBLICATIONS_TABLE}`, {
     method: "POST",
@@ -1099,8 +1095,8 @@ export default function ResearchDashboard() {
       const rows = dataRows.map((dataRow) => Object.fromEntries(headers.map((header, index) => [header, dataRow[index] ?? ""])));
       const imported = rows.map(rowToPublication).filter(Boolean);
       if (!imported.length) throw new Error("No valid rows found. Use Authors, Title, Journal, Field, Year, Index, and URL columns.");
-      const saved = await replaceResearchPublications(imported);
-      setPublications(saved);
+      const saved = await appendResearchPublications(imported);
+      setPublications((current) => [...saved, ...current]);
       setYear("All years");
       setTheme("All fields");
       setQuery("");
