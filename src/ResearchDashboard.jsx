@@ -669,9 +669,6 @@ function PublicShell({ mode, setMode, children }) {
             <button type="button" onClick={() => setMode("publications")} className={`shrink-0 rounded-full px-4 py-2 transition sm:px-5 ${mode === "publications" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
               Publications
             </button>
-            <button type="button" onClick={() => setMode("admin")} className="shrink-0 rounded-full px-4 py-2 text-[#315577] transition hover:bg-white sm:px-5">
-              Dashboard Preview
-            </button>
             <button type="button" onClick={() => setMode("login")} className={`shrink-0 rounded-full px-4 py-2 transition sm:px-5 ${mode === "login" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
               Login Mode
             </button>
@@ -699,7 +696,6 @@ function LandingPage({ setMode, publications }) {
         <h1 className="mt-6 text-5xl font-black leading-[0.95] tracking-tight text-[#102f52] sm:text-6xl lg:text-7xl">Department Research Publications</h1>
         <p className="mt-7 max-w-xl text-lg leading-8 text-[#4f6478]">A focused dashboard for journal publications, authors, indexes, and research fields across the English Department.</p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <Button onClick={() => setMode("admin")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />Dashboard Preview</Button>
           <Button variant="secondary" onClick={() => setMode("overview")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
           <Button variant="secondary" onClick={() => setMode("publications")} className="!rounded-2xl px-6 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
           <Button variant="secondary" onClick={() => setMode("login")} className="!rounded-2xl px-6 py-3 text-base"><Icons.users className="h-5 w-5" />Login Mode</Button>
@@ -778,7 +774,6 @@ function LoginPage({ setMode, onLogin }) {
         <p className="mt-7 max-w-xl text-lg leading-8 text-[#4f6478]">Sign in to manage publication records, journal indexes, author data, and department research reporting.</p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
           <Button variant="secondary" onClick={() => setMode("landing")} aria-label="Home" title="Home" className="!h-12 !w-12 !rounded-2xl !px-0 !py-0"><Icons.home className="h-5 w-5" /></Button>
-          <Button onClick={() => setMode("admin")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />Dashboard Preview</Button>
         </div>
       </motion.section>
 
