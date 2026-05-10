@@ -995,7 +995,7 @@ function PublicPublicationsPage({ items, onSee }) {
 }
 
 export default function ResearchDashboard() {
-  const [mode, setMode] = useState("admin");
+  const [mode, setMode] = useState("landing");
   const [active, setActive] = useState("dashboard");
   const [userEmail, setUserEmail] = useState(() => getStoredUserEmail() || "Preview mode");
   const [publications, setPublications] = useState(() => initialPublications.map(ensurePublicationId));
