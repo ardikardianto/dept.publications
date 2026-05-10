@@ -698,8 +698,7 @@ function LandingPage({ setMode, publications }) {
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button variant="secondary" onClick={() => setMode("overview")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
           <Button variant="secondary" onClick={() => setMode("publications")} className="!rounded-2xl px-6 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
-          <Button variant="secondary" onClick={() => setMode("login")} className="!rounded-2xl px-6 py-3 text-base"><Icons.users className="h-5 w-5" />Login Mode</Button>
-          <a href="https://sl.ut.ac.id/publikasi_sasing" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#d7e6f7] bg-white px-6 py-3 text-base font-semibold text-[#102f52] transition hover:bg-[#f4f9ff]">
+          <a href="https://sl.ut.ac.id/publikasi_sasing" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffd23f] px-6 py-3 text-base font-black text-[#102f52] shadow-sm transition hover:bg-[#f3c72f]">
             <Icons.file className="h-5 w-5" />
             Submit Article
           </a>
