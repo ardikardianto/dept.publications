@@ -53,21 +53,21 @@ const Icons = {
 const themes = ["Linguistics", "Literature", "Translation"];
 const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
-const palette = ["#005baa", "#ffd23f", "#27a875", "#e86f4d", "#7462d8", "#4f8cc9"];
+const palette = ["#91b7df", "#f4d77f", "#8fc8a9", "#e8a993", "#b6a8df", "#9cc8d8"];
 const indexPalette = {
-  Scopus: "#005baa",
-  EBSCO: "#27a875",
-  Copernicus: "#e86f4d",
-  DOAJ: "#7462d8",
-  ProQuest: "#c99800",
-  "Sinta 2": "#0f766e",
-  "Sinta 3": "#2563eb",
-  "Sinta 4": "#9333ea",
-  "Sinta 5": "#db2777",
-  "Sinta 6": "#ea580c",
-  "Non-Sinta": "#64748b",
-  "International Proceedings": "#16a34a",
-  "National Proceedings": "#b45309",
+  Scopus: "#91b7df",
+  EBSCO: "#8fc8a9",
+  Copernicus: "#e8a993",
+  DOAJ: "#b6a8df",
+  ProQuest: "#f4d77f",
+  "Sinta 2": "#9cc8d8",
+  "Sinta 3": "#b8d8a6",
+  "Sinta 4": "#d8b4d8",
+  "Sinta 5": "#f1b7c4",
+  "Sinta 6": "#efc09a",
+  "Non-Sinta": "#b8c0cc",
+  "International Proceedings": "#a5d6c2",
+  "National Proceedings": "#d6c29a",
 };
 
 const researchers = [
@@ -127,6 +127,19 @@ function uniq(items) {
 
 function includes(value, query) {
   return String(value || "").toLowerCase().includes(String(query || "").toLowerCase());
+}
+
+function splitAuthors(authors) {
+  const text = String(authors || "").trim();
+  if (!text) return [];
+  const primaryParts = text.split(/\s*(?:;|\|)\s*/).filter(Boolean);
+  const parts = primaryParts.length > 1 ? primaryParts : text.split(/\s+(?:and|&)\s+/i).filter(Boolean);
+  const finalParts = parts.length > 1 ? parts : text.split(/\s*,\s*/).filter(Boolean);
+  return finalParts.map((name) => name.trim()).filter(Boolean);
+}
+
+function uniqueAuthorCount(items) {
+  return new Set(items.flatMap((item) => splitAuthors(item.authors)).map((name) => name.toLowerCase())).size;
 }
 
 function publicationTrendData(items) {
@@ -820,7 +833,7 @@ function LoginPage({ setMode, onLogin }) {
 }
 
 
-function OverviewPage({ filteredPublications, filteredResearchers, setActive }) {
+function OverviewPage({ filteredPublications, setActive }) {
   return (
     <div className="space-y-6">
       <div>
@@ -828,12 +841,13 @@ function OverviewPage({ filteredPublications, filteredResearchers, setActive }) 
         <h1 className="mt-2 text-4xl font-black tracking-tight text-[#102f52] sm:text-5xl">Department Research Publications</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4f6478]">A quick view of publication volume, authors, journal indexes, and research fields.</p>
       </div>
-      <Dashboard filteredPublications={filteredPublications} filteredResearchers={filteredResearchers} setActive={setActive} actionLabel="View publications" />
+      <Dashboard filteredPublications={filteredPublications} setActive={setActive} actionLabel="View publications" />
     </div>
   );
 }
 
-function Dashboard({ filteredPublications, filteredResearchers, setActive, actionLabel = "View publications" }) {
+function Dashboard({ filteredPublications, setActive, actionLabel = "View publications" }) {
+  const authorCount = uniqueAuthorCount(filteredPublications);
   const nationalJournals = filteredPublications.filter((item) => isNationalJournalIndex(item.type)).length;
   const internationalJournals = filteredPublications.filter((item) => isInternationalJournalIndex(item.type)).length;
   const themeData = themes.map((theme) => ({ name: theme, value: filteredPublications.filter((publication) => publication.theme === theme).length })).filter((item) => item.value);
@@ -844,7 +858,7 @@ function Dashboard({ filteredPublications, filteredResearchers, setActive, actio
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" />
-        <Stat label="Authors" value={filteredResearchers.length} icon={Icons.users} note="Contributing department authors" />
+        <Stat label="Authors" value={authorCount} icon={Icons.users} note="Unique authors in publications" />
         <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" tone="amber" />
         <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" />
       </div>
@@ -930,28 +944,37 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
         <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1180px] text-left text-sm">
+        <table className="w-full table-fixed text-left text-sm">
+          <colgroup>
+            <col className="w-[17%]" />
+            <col className="w-[26%]" />
+            <col className="w-[17%]" />
+            <col className="w-[11%]" />
+            <col className="w-[8%]" />
+            <col className="w-[11%]" />
+            <col className="w-[10%]" />
+          </colgroup>
           <thead className="bg-[#f7fbff] text-[10px] uppercase tracking-[0.16em] text-[#315577]">
             <tr>
-              <th className="px-4 py-4">{sortHeader("Authors", "authors")}</th>
-              <th className="px-4 py-4">{sortHeader("Title", "title")}</th>
-              <th className="px-4 py-4">{sortHeader("Journal", "journal")}</th>
-              <th className="px-4 py-4">{sortHeader("Field", "theme")}</th>
-              <th className="px-4 py-4">{sortHeader("Year", "year")}</th>
-              <th className="px-4 py-4">{sortHeader("Index", "index")}</th>
-              <th className="px-4 py-4 font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
+              <th className="px-3 py-4">{sortHeader("Authors", "authors")}</th>
+              <th className="px-3 py-4">{sortHeader("Title", "title")}</th>
+              <th className="px-3 py-4">{sortHeader("Journal", "journal")}</th>
+              <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
+              <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
+              <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
+              <th className="px-3 py-4 font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
             </tr>
           </thead>
           <tbody>
             {sortedItems.map((item) => (
               <tr key={publicationIdentity(item)} className="border-t border-[#edf3f1]">
-                <td className="px-4 py-4 text-[#4f6478]">{item.authors}</td>
-                <td className="px-4 py-4 font-normal text-[#102f52]">{item.title}</td>
-                <td className="px-4 py-4 text-[#4f6478]">{item.venue}</td>
-                <td className="px-4 py-4"><Badge tone="blue">{item.theme}</Badge></td>
-                <td className="px-4 py-4">{item.year}</td>
-                <td className="px-4 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
-                <td className="px-4 py-4">
+                <td className="break-words px-3 py-4 text-[#4f6478]">{item.authors}</td>
+                <td className="break-words px-3 py-4 font-normal text-[#102f52]">{item.title}</td>
+                <td className="break-words px-3 py-4 text-[#4f6478]">{item.venue}</td>
+                <td className="px-3 py-4"><Badge tone="blue">{item.theme}</Badge></td>
+                <td className="px-3 py-4">{item.year}</td>
+                <td className="px-3 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
+                <td className="px-3 py-4">
                   <div className="flex flex-wrap gap-2">
                     {canManage && (
                       <>
@@ -1006,7 +1029,6 @@ export default function ResearchDashboard() {
   const [query, setQuery] = useState("");
 
   const filteredPublications = useMemo(() => publications.filter((item) => (year === "All years" || item.year === year) && (theme === "All fields" || item.theme === theme) && [item.authors, item.title, item.venue, item.theme, item.status, item.type].some((value) => includes(value, query))), [publications, year, theme, query]);
-  const filteredResearchers = useMemo(() => researchers.filter((researcher) => (theme === "All fields" || researcher.theme === theme) && [researcher.name, researcher.role, researcher.theme].some((value) => includes(value, query))), [theme, query]);
   const yearOptions = useMemo(() => uniq([...years, ...publications.map((item) => item.year)]).sort((a, b) => String(b).localeCompare(String(a), undefined, { numeric: true })), [publications]);
   const themeOptions = useMemo(() => uniq([...themes, ...publications.map((item) => item.theme)]), [publications]);
   const canManagePublications = Boolean(userEmail && userEmail !== "Preview mode" && getAccessToken());
@@ -1091,7 +1113,7 @@ export default function ResearchDashboard() {
   };
 
   const pages = {
-    dashboard: <Dashboard filteredPublications={filteredPublications} filteredResearchers={filteredResearchers} setActive={setActive} />,
+    dashboard: <Dashboard filteredPublications={filteredPublications} setActive={setActive} />,
     publications: <Publications items={filteredPublications} canManage={canManagePublications} onEdit={(item) => setArticleModal({ mode: "edit", item })} onDelete={deleteArticle} onSee={setViewArticle} />,
   };
 
@@ -1135,7 +1157,7 @@ export default function ResearchDashboard() {
         ? (
           <div className="space-y-6">
             <Filters year={year} setYear={setYear} theme={theme} setTheme={setTheme} query={query} setQuery={setQuery} yearOptions={yearOptions} themeOptions={themeOptions} />
-            <OverviewPage filteredPublications={filteredPublications} filteredResearchers={filteredResearchers} setActive={() => setMode("publications")} />
+            <OverviewPage filteredPublications={filteredPublications} setActive={() => setMode("publications")} />
           </div>
         )
         : mode === "publications"
