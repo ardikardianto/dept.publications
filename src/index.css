@@ -424,6 +424,11 @@ html {
     overflow-x: visible;
   }
 
+  .mobile-card-table .publication-table-shell {
+    border: 0;
+    border-radius: 0;
+  }
+
   .mobile-card-table table,
   .mobile-card-table thead,
   .mobile-card-table tbody,

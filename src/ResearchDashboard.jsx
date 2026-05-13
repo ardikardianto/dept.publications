@@ -3,8 +3,6 @@ import { motion } from "framer-motion";
 import { readSheet } from "read-excel-file/browser";
 import writeXlsxFile from "write-excel-file/browser";
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Legend,
@@ -54,21 +52,6 @@ const themes = ["Linguistics", "Literature", "Translation"];
 const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
 const palette = ["#91b7df", "#f4d77f", "#8fc8a9", "#e8a993", "#b6a8df", "#9cc8d8"];
-const indexPalette = {
-  Scopus: "#91b7df",
-  EBSCO: "#8fc8a9",
-  Copernicus: "#e8a993",
-  DOAJ: "#b6a8df",
-  ProQuest: "#f4d77f",
-  "Sinta 2": "#9cc8d8",
-  "Sinta 3": "#b8d8a6",
-  "Sinta 4": "#d8b4d8",
-  "Sinta 5": "#f1b7c4",
-  "Sinta 6": "#efc09a",
-  "Non-Sinta": "#b8c0cc",
-  "International Proceedings": "#a5d6c2",
-  "National Proceedings": "#d6c29a",
-};
 
 const researchers = [
   { id: "R-01", name: "Dr. Mira Suryani", role: "Research Lead", theme: "Linguistics", projects: 4, publications: 8, hIndex: 7 },
@@ -109,6 +92,8 @@ const nav = [
 ];
 
 const publicationIndexes = ["Scopus", "EBSCO", "Copernicus", "DOAJ", "ProQuest", "Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6", "Non-Sinta", "International Proceedings", "National Proceedings"];
+const internationalJournalIndexes = ["Scopus", "EBSCO", "Copernicus", "DOAJ", "ProQuest"];
+const nationalJournalIndexes = ["Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6"];
 const publicationColumns = ["Authors", "Title", "Journal", "Field", "Year", "Index", "URL"];
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -140,6 +125,13 @@ function splitAuthors(authors) {
 
 function uniqueAuthorCount(items) {
   return new Set(items.flatMap((item) => splitAuthors(item.authors)).map((name) => name.toLowerCase())).size;
+}
+
+function countIndexes(items, indexNames) {
+  return indexNames.map((name) => ({
+    name,
+    value: items.filter((item) => item.type === name).length,
+  }));
 }
 
 function publicationTrendData(items) {
@@ -459,6 +451,91 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
         </span>
       </div>
     </Card>
+  );
+}
+
+function BubbleLabel({ x, y, title, value, light = false, large = false }) {
+  const words = title.split(" ");
+  const fill = light ? "#ffffff" : "#102f52";
+  return (
+    <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill={fill} fontFamily="Inter, ui-sans-serif, system-ui">
+      <tspan x={x} dy={large ? "-0.95em" : "-0.55em"} fontSize={large ? 15 : 11} fontWeight="800">{words[0]}</tspan>
+      {words.length > 1 && <tspan x={x} dy="1.2em" fontSize={large ? 15 : 11} fontWeight="800">{words.slice(1).join(" ")}</tspan>}
+      <tspan x={x} dy="1.35em" fontSize={large ? 26 : 15} fontWeight="900">{value}</tspan>
+    </text>
+  );
+}
+
+function JournalBubbleChart({ publications }) {
+  const internationalItems = countIndexes(publications, internationalJournalIndexes).filter((item) => item.value);
+  const nationalItems = countIndexes(publications, nationalJournalIndexes).filter((item) => item.value);
+  const internationalTotal = internationalItems.reduce((sum, item) => sum + item.value, 0);
+  const nationalTotal = nationalItems.reduce((sum, item) => sum + item.value, 0);
+  const indexedTotal = internationalTotal + nationalTotal;
+  const internationalPositions = [
+    { x: 688, y: 292 }, { x: 724, y: 176 }, { x: 560, y: 322 }, { x: 538, y: 72 }, { x: 672, y: 58 },
+  ];
+  const nationalPositions = [
+    { x: 110, y: 100 }, { x: 104, y: 256 }, { x: 302, y: 112 }, { x: 312, y: 354 }, { x: 164, y: 372 },
+  ];
+  const childColors = ["#c6dfef", "#f6d9c8", "#d9cdef", "#c8e6d6", "#f8e49b"];
+  const childRadius = (value) => Math.min(48, 31 + value * 2.4);
+
+  return (
+    <div className="overflow-hidden rounded-[1.5rem] bg-[#fbfcff]">
+      <svg viewBox="0 0 820 430" className="h-full min-h-[22rem] w-full" role="img" aria-label={`Bubble chart with ${internationalTotal} international journals and ${nationalTotal} national journals`}>
+        <title>Journal index bubble chart</title>
+        <defs>
+          <marker id="bubble-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#102f52" />
+          </marker>
+        </defs>
+
+        <line x1="472" y1="176" x2="540" y2="138" stroke="#102f52" strokeWidth="4" markerEnd="url(#bubble-arrow)" />
+        <line x1="346" y1="250" x2="278" y2="286" stroke="#102f52" strokeWidth="4" markerEnd="url(#bubble-arrow)" />
+
+        {internationalItems.map((item, index) => {
+          const point = internationalPositions[index % internationalPositions.length];
+          return (
+            <g key={item.name}>
+              <line x1="610" y1="126" x2={point.x} y2={point.y} stroke="#9fb2c6" strokeWidth="2" strokeDasharray="4 6" />
+              <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[index % childColors.length]} opacity="0.94" />
+              <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} />
+            </g>
+          );
+        })}
+
+        {nationalItems.map((item, index) => {
+          const point = nationalPositions[index % nationalPositions.length];
+          return (
+            <g key={item.name}>
+              <line x1="218" y1="300" x2={point.x} y2={point.y} stroke="#9fb2c6" strokeWidth="2" strokeDasharray="4 6" />
+              <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[(index + 2) % childColors.length]} opacity="0.94" />
+              <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} />
+            </g>
+          );
+        })}
+
+        <circle cx="410" cy="212" r="82" fill="#102f52" />
+        <text x="410" y="202" textAnchor="middle" fill="#ffffff" fontFamily="Georgia, serif" fontSize="21" fontWeight="800" letterSpacing="1.5">
+          <tspan x="410">JOURNAL</tspan>
+          <tspan x="410" dy="1.35em">INDEXES</tspan>
+          <tspan x="410" dy="1.45em" fontFamily="Inter, ui-sans-serif, system-ui" fontSize="22">{indexedTotal}</tspan>
+        </text>
+
+        <circle cx="610" cy="126" r="78" fill="#f4d77f" opacity="0.98" />
+        <BubbleLabel x={610} y={126} title="International Journals" value={internationalTotal} large />
+
+        <circle cx="218" cy="300" r="76" fill="#91b7df" opacity="0.98" />
+        <BubbleLabel x={218} y={300} title="National Journals" value={nationalTotal} large />
+
+        {!indexedTotal && (
+          <text x="410" y="404" textAnchor="middle" fill="#4f6478" fontSize="16" fontWeight="700">
+            No national or international journal indexes in the current filter.
+          </text>
+        )}
+      </svg>
+    </div>
   );
 }
 
@@ -875,7 +952,6 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
   const nationalJournals = filteredPublications.filter((item) => isNationalJournalIndex(item.type)).length;
   const internationalJournals = filteredPublications.filter((item) => isInternationalJournalIndex(item.type)).length;
   const themeData = themes.map((theme) => ({ name: theme, value: filteredPublications.filter((publication) => publication.theme === theme).length })).filter((item) => item.value);
-  const indexData = uniq(filteredPublications.map((publication) => publication.type)).map((type) => ({ name: type, value: filteredPublications.filter((publication) => publication.type === type).length }));
   const trendData = publicationTrendData(filteredPublications);
 
   return (
@@ -924,18 +1000,9 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       </div>
 
       <Card variant="lavender" className="p-5">
-        <h2 className="mb-4 font-black text-[#102f52]">Publications by index</h2>
-        <div className="h-72">
-          <ResponsiveContainer>
-            <PieChart>
-              <Pie data={indexData} dataKey="value" nameKey="name" innerRadius={65} outerRadius={100}>
-                {indexData.map((item, index) => <Cell key={item.name} fill={indexPalette[item.name] || palette[index % palette.length]} />)}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <h2 className="mb-2 font-black text-[#102f52]">Journal index bubbles</h2>
+        <p className="mb-4 text-sm text-[#4f6478]">National and international journals are the main anchors, with indexed categories clustered around each one.</p>
+        <JournalBubbleChart publications={filteredPublications} />
       </Card>
     </div>
   );
@@ -967,58 +1034,60 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
         <h1 className="text-2xl font-black text-[#102f52]">Publication pipeline</h1>
         <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full table-fixed text-left text-sm">
-          <colgroup>
-            <col className="w-[17%]" />
-            <col className="w-[26%]" />
-            <col className="w-[17%]" />
-            <col className="w-[11%]" />
-            <col className="w-[8%]" />
-            <col className="w-[11%]" />
-            <col className="w-[10%]" />
-          </colgroup>
-          <thead className="bg-[#f7fbff] text-[10px] uppercase tracking-[0.16em] text-[#315577]">
-            <tr>
-              <th className="px-3 py-4">{sortHeader("Authors", "authors")}</th>
-              <th className="px-3 py-4">{sortHeader("Title", "title")}</th>
-              <th className="px-3 py-4">{sortHeader("Journal", "journal")}</th>
-              <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
-              <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
-              <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
-              <th className="px-3 py-4 font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedItems.map((item) => (
-              <tr key={publicationIdentity(item)} className="border-t border-[#edf3f1]">
-                <td className="break-words px-3 py-4 text-[#4f6478]">{item.authors}</td>
-                <td className="break-words px-3 py-4 font-normal text-[#102f52]">{item.title}</td>
-                <td className="break-words px-3 py-4 text-[#4f6478]">{item.venue}</td>
-                <td className="px-3 py-4"><Badge tone="blue">{item.theme}</Badge></td>
-                <td className="px-3 py-4">{item.year}</td>
-                <td className="px-3 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
-                <td className="px-3 py-4">
-                  <div className="flex flex-wrap gap-2">
-                    {canManage && (
-                      <>
-                        <button type="button" onClick={() => onEdit?.(item)} title="Edit" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`Edit publication: ${item.title}`}>
-                          <Icons.edit className="h-4 w-4" />
-                        </button>
-                        <button type="button" onClick={() => onDelete?.(item)} title="Delete" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#f3caca] bg-white text-[#8a3a3a] transition hover:bg-[#fde2e2]" aria-label={`Delete publication: ${item.title}`}>
-                          <Icons.trash className="h-4 w-4" />
-                        </button>
-                      </>
-                    )}
-                    <button type="button" onClick={() => onSee?.(item)} title="See" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`See publication: ${item.title}`}>
-                      <Icons.eye className="h-4 w-4" />
-                    </button>
-                  </div>
-                </td>
+      <div className="p-5 pt-0">
+        <div className="publication-table-shell overflow-x-auto rounded-2xl border border-[#d7e6f7]">
+          <table className="w-full table-fixed text-left text-sm">
+            <colgroup>
+              <col className="w-[17%]" />
+              <col className="w-[26%]" />
+              <col className="w-[17%]" />
+              <col className="w-[11%]" />
+              <col className="w-[8%]" />
+              <col className="w-[11%]" />
+              <col className="w-[10%]" />
+            </colgroup>
+            <thead className="bg-[#f7fbff] text-[10px] uppercase tracking-[0.16em] text-[#315577]">
+              <tr>
+                <th className="px-3 py-4">{sortHeader("Authors", "authors")}</th>
+                <th className="px-3 py-4">{sortHeader("Title", "title")}</th>
+                <th className="px-3 py-4">{sortHeader("Journal", "journal")}</th>
+                <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
+                <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
+                <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
+                <th className="px-3 py-4 font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sortedItems.map((item) => (
+                <tr key={publicationIdentity(item)} className="border-t border-[#edf3f1]">
+                  <td className="break-words px-3 py-4 text-[#4f6478]">{item.authors}</td>
+                  <td className="break-words px-3 py-4 font-normal text-[#102f52]">{item.title}</td>
+                  <td className="break-words px-3 py-4 text-[#4f6478]">{item.venue}</td>
+                  <td className="px-3 py-4"><Badge tone="blue">{item.theme}</Badge></td>
+                  <td className="px-3 py-4">{item.year}</td>
+                  <td className="px-3 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
+                  <td className="px-3 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {canManage && (
+                        <>
+                          <button type="button" onClick={() => onEdit?.(item)} title="Edit" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`Edit publication: ${item.title}`}>
+                            <Icons.edit className="h-4 w-4" />
+                          </button>
+                          <button type="button" onClick={() => onDelete?.(item)} title="Delete" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#f3caca] bg-white text-[#8a3a3a] transition hover:bg-[#fde2e2]" aria-label={`Delete publication: ${item.title}`}>
+                            <Icons.trash className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
+                      <button type="button" onClick={() => onSee?.(item)} title="See" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`See publication: ${item.title}`}>
+                        <Icons.eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       {!items.length && <p className="p-6 text-center text-sm text-[#4f6478]">No publications match the current filters.</p>}
     </Card>
