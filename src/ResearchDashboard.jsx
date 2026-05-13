@@ -374,8 +374,17 @@ async function exportPublicationsToXLSX(items) {
   await writeXlsxFile(rows).toFile(`UT_English_Publications_${new Date().toISOString().slice(0, 10)}.xlsx`);
 }
 
-function Card({ children, className = "" }) {
-  return <div className={`rounded-2xl border border-[#d7e6f7] bg-white shadow-sm shadow-[#005baa]/5 ${className}`}>{children}</div>;
+function Card({ children, className = "", variant = "default" }) {
+  const variants = {
+    default: "border-[#d9e7fb] bg-gradient-to-br from-[#fff8dc] via-[#eef8ff] to-[#f7efff] shadow-[0_16px_42px_rgba(91,132,177,0.12)]",
+    sky: "border-[#cfe3fb] bg-gradient-to-br from-[#eef8ff] via-white to-[#eaf4ff] shadow-[0_16px_42px_rgba(91,132,177,0.13)]",
+    mint: "border-[#cfe9dc] bg-gradient-to-br from-[#effbf5] via-white to-[#e8f7ef] shadow-[0_16px_42px_rgba(111,164,132,0.13)]",
+    lemon: "border-[#f3dfa2] bg-gradient-to-br from-[#fff9dc] via-white to-[#fff1b8] shadow-[0_16px_42px_rgba(214,177,73,0.15)]",
+    peach: "border-[#f1d1c5] bg-gradient-to-br from-[#fff3ec] via-white to-[#ffe9df] shadow-[0_16px_42px_rgba(203,139,111,0.13)]",
+    lavender: "border-[#ddd4f5] bg-gradient-to-br from-[#f7f2ff] via-white to-[#eee8ff] shadow-[0_16px_42px_rgba(145,124,192,0.13)]",
+    rose: "border-[#f2ced8] bg-gradient-to-br from-[#fff1f5] via-white to-[#ffe8ef] shadow-[0_16px_42px_rgba(199,116,141,0.12)]",
+  };
+  return <div className={`rounded-2xl border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
 }
 
 function Badge({ children, tone = "blue" }) {
@@ -422,15 +431,29 @@ function TextSearch({ value, onChange, placeholder }) {
 }
 
 function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
+  const variants = {
+    amber: "lemon",
+    blue: "sky",
+    green: "mint",
+    red: "rose",
+    slate: "lavender",
+  };
+  const iconStyles = {
+    amber: "bg-[#ffe287] text-[#71540f]",
+    blue: "bg-[#d8ecff] text-[#005baa]",
+    green: "bg-[#dff4e9] text-[#315f45]",
+    red: "bg-[#ffe1e7] text-[#8a3a3a]",
+    slate: "bg-[#ece7ff] text-[#4d4f78]",
+  };
   return (
-    <Card className={tone === "amber" ? "border-[#f0d264] bg-[#fff9df] p-5" : "p-5"}>
+    <Card variant={variants[tone] || "sky"} className="p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#315577]">{label}</p>
           <p className="mt-3 text-4xl font-light text-[#102f52]">{value}</p>
           {note && <p className="mt-1 text-xs text-[#4f6478]">{note}</p>}
         </div>
-        <span className={tone === "amber" ? "rounded-xl bg-[#ffd23f] p-3 text-[#102f52]" : "rounded-xl bg-[#eef5ff] p-3 text-[#005baa]"}>
+        <span className={`rounded-xl p-3 ${iconStyles[tone] || iconStyles.blue}`}>
           <Icon />
         </span>
       </div>
@@ -440,7 +463,7 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
 
 function Filters({ year, setYear, theme, setTheme, query, setQuery, yearOptions = years, themeOptions = themes }) {
   return (
-    <Card className="p-4">
+    <Card variant="mint" className="p-4">
       <div className="grid gap-3 lg:grid-cols-[1fr_180px_220px] lg:items-end">
         <TextSearch value={query} onChange={setQuery} placeholder="Search authors, titles, journals, fields, or indexes..." />
         <Select label="Year" value={year} onChange={setYear} options={["All years", ...yearOptions]} />
@@ -457,7 +480,7 @@ function Modal({ title, children, onClose }) {
         onClick={(event) => event.stopPropagation()}
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[1.75rem] border border-[#d7e6f7] bg-white p-5 shadow-2xl sm:rounded-[1.75rem]"
+        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[1.75rem] border border-[#ddd4f5] bg-gradient-to-br from-[#fff8dc] via-white to-[#f7efff] p-5 shadow-2xl sm:rounded-[1.75rem]"
       >
         <div className="mb-5 flex items-center justify-between gap-4">
           <h2 className="text-xl font-black text-[#102f52]">{title}</h2>
@@ -553,7 +576,7 @@ function ArticleDetails({ article, onClose }) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-2xl border border-[#d7e6f7] bg-[#f7fbff] p-5">
+      <div className="rounded-2xl border border-[#cfe3fb] bg-gradient-to-br from-[#eef8ff] via-white to-[#f7efff] p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">{article.year}</p>
@@ -592,7 +615,7 @@ function ArticleDetails({ article, onClose }) {
 
 function DashboardTools({ publications, importMessage, canManage, onAddArticle, onExport, onImport, onRequireLogin }) {
   return (
-    <Card className="p-4">
+    <Card variant="lemon" className="p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">Publication Data</p>
@@ -722,10 +745,10 @@ function LandingPage({ setMode, publications }) {
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-[2rem] border border-[#d7e6f7] bg-[#f7fbff] p-5 shadow-[0_28px_90px_rgba(0,91,170,0.10)] sm:p-7"
+        className="rounded-[2rem] border border-[#d9e7fb] bg-gradient-to-br from-[#eef8ff] via-[#fff8dc] to-[#f7efff] p-5 shadow-[0_28px_90px_rgba(91,132,177,0.14)] sm:p-7"
       >
         <div className="grid gap-4">
-          <Card className="p-5">
+          <Card variant="sky" className="p-5">
             <h2 className="mb-3 font-black text-[#102f52]">Five-year output trend</h2>
             <div className="h-56">
               <ResponsiveContainer>
@@ -740,7 +763,7 @@ function LandingPage({ setMode, publications }) {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card variant="mint" className="p-5">
             <h2 className="mb-3 font-black text-[#102f52]">Publications by field</h2>
             <div className="h-56">
               <ResponsiveContainer>
@@ -803,7 +826,7 @@ function LoginPage({ setMode, onLogin }) {
           <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#c99800]">Admin only</p>
           <p className="mt-1 text-lg font-black text-[#102f52]">Publication data</p>
         </div>
-        <Card className="relative z-10 ml-auto w-full rounded-[2rem] p-5 shadow-[0_28px_90px_rgba(0,91,170,0.14)] sm:p-7 lg:max-w-md lg:p-8">
+        <Card variant="lavender" className="relative z-10 ml-auto w-full rounded-[2rem] p-5 shadow-[0_28px_90px_rgba(145,124,192,0.16)] sm:p-7 lg:max-w-md lg:p-8">
           <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#005baa]">Restricted access</p>
           <h2 className="mt-2 text-3xl font-black tracking-tight text-[#102f52] sm:text-4xl">Sign in</h2>
           <p className="mt-3 text-base leading-7 text-[#4f6478]">Welcome back! Please sign in to your account.</p>
@@ -864,7 +887,7 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="p-5">
+        <Card variant="sky" className="p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-black text-[#102f52]">Five-year output trend</h2>
             <Button variant="ghost" onClick={() => setActive("publications")}>{actionLabel}</Button>
@@ -883,7 +906,7 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
           </div>
         </Card>
 
-        <Card className="p-5">
+        <Card variant="mint" className="p-5">
           <h2 className="mb-4 font-black text-[#102f52]">Publications by field</h2>
           <div className="h-80">
             <ResponsiveContainer>
@@ -899,7 +922,7 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
         </Card>
       </div>
 
-      <Card className="p-5">
+      <Card variant="lavender" className="p-5">
         <h2 className="mb-4 font-black text-[#102f52]">Publications by index</h2>
         <div className="h-72">
           <ResponsiveContainer>
@@ -938,7 +961,7 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
   );
 
   return (
-    <Card className="mobile-card-table overflow-hidden">
+    <Card variant="peach" className="mobile-card-table overflow-hidden">
       <div className="border-b border-[#d7e6f7] p-5">
         <h1 className="text-2xl font-black text-[#102f52]">Publication pipeline</h1>
         <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
@@ -1187,7 +1210,7 @@ export default function ResearchDashboard() {
           </div>
           <Header active={active} />
           <div className="space-y-6">
-            {databaseMessage && <Card className="p-4"><p className="text-sm font-semibold text-[#315577]">{databaseMessage}</p></Card>}
+            {databaseMessage && <Card variant="sky" className="p-4"><p className="text-sm font-semibold text-[#315577]">{databaseMessage}</p></Card>}
             {active === "publications" && <DashboardTools publications={publications} importMessage={importMessage} canManage={canManagePublications} onAddArticle={() => setArticleModal({ mode: "add" })} onExport={exportPublications} onImport={importPublications} onRequireLogin={() => setImportMessage("Please sign in before changing publication data.")} />}
             <Filters year={year} setYear={setYear} theme={theme} setTheme={setTheme} query={query} setQuery={setQuery} yearOptions={yearOptions} themeOptions={themeOptions} />
             <motion.div key={`${active}-${year}-${theme}-${query}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
