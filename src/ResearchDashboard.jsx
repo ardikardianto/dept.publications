@@ -1048,13 +1048,13 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
         <div className="publication-table-shell overflow-x-auto rounded-2xl border border-[#d7e6f7]">
           <table className="w-full table-fixed text-left text-sm">
             <colgroup>
-              <col className="w-[17%]" />
-              <col className="w-[26%]" />
-              <col className="w-[17%]" />
-              <col className="w-[11%]" />
-              <col className="w-[8%]" />
-              <col className="w-[11%]" />
-              <col className="w-[10%]" />
+              <col style={{ width: canManage ? "16%" : "20%" }} />
+              <col style={{ width: canManage ? "25%" : "28%" }} />
+              <col style={{ width: canManage ? "17%" : "20%" }} />
+              <col style={{ width: canManage ? "10%" : "10%" }} />
+              <col style={{ width: canManage ? "7%" : "7%" }} />
+              <col style={{ width: canManage ? "10%" : "9%" }} />
+              <col style={{ width: canManage ? "15%" : "6%" }} />
             </colgroup>
             <thead className="bg-[#f7fbff] text-[10px] uppercase tracking-[0.16em] text-[#315577]">
               <tr>
@@ -1064,7 +1064,7 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
                 <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
                 <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
                 <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
-                <th className="px-3 py-4 font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
+                <th className="px-3 py-4 text-right font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -1076,8 +1076,8 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
                   <td className="px-3 py-4"><Badge tone="blue">{item.theme}</Badge></td>
                   <td className="px-3 py-4">{item.year}</td>
                   <td className="px-3 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
-                  <td className="px-3 py-4">
-                    <div className="flex flex-wrap gap-2">
+                  <td className="px-3 py-4 text-right">
+                    <div className="flex flex-nowrap justify-end gap-2">
                       {canManage && (
                         <>
                           <button type="button" onClick={() => onEdit?.(item)} title="Edit" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`Edit publication: ${item.title}`}>
