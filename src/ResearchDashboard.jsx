@@ -383,6 +383,7 @@ function Card({ children, className = "", variant = "default" }) {
     peach: "border-[#f1d1c5] bg-gradient-to-br from-[#fff3ec] via-white to-[#ffe9df] shadow-[0_16px_42px_rgba(203,139,111,0.13)]",
     lavender: "border-[#ddd4f5] bg-gradient-to-br from-[#f7f2ff] via-white to-[#eee8ff] shadow-[0_16px_42px_rgba(145,124,192,0.13)]",
     rose: "border-[#f2ced8] bg-gradient-to-br from-[#fff1f5] via-white to-[#ffe8ef] shadow-[0_16px_42px_rgba(199,116,141,0.12)]",
+    neutral: "border-[#d7e6f7] bg-white shadow-[0_14px_34px_rgba(16,47,82,0.08)]",
   };
   return <div className={`rounded-2xl border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
 }
@@ -882,8 +883,8 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" />
         <Stat label="Authors" value={authorCount} icon={Icons.users} note="Unique authors in publications" />
-        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" tone="amber" />
-        <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" />
+        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" />
+        <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" tone="amber" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -961,7 +962,7 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
   );
 
   return (
-    <Card variant="peach" className="mobile-card-table overflow-hidden">
+    <Card variant="neutral" className="mobile-card-table overflow-hidden">
       <div className="border-b border-[#d7e6f7] p-5">
         <h1 className="text-2xl font-black text-[#102f52]">Publication pipeline</h1>
         <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
