@@ -508,7 +508,7 @@ function JournalBubbleChart({ publications }) {
           const point = internationalPositions[index % internationalPositions.length];
           return (
             <g key={item.name}>
-              <line x1="610" y1="126" x2={point.x} y2={point.y} stroke="#c3cfdb" strokeWidth="1.3" strokeDasharray="3 7" opacity="0.55" />
+              <line x1="610" y1="126" x2={point.x} y2={point.y} stroke="#8da7bf" strokeWidth="1.8" strokeDasharray="4 5" opacity="0.8" />
               <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[index % childColors.length]} opacity="0.94" />
               <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} radius={childRadius(item.value)} />
             </g>
@@ -519,7 +519,7 @@ function JournalBubbleChart({ publications }) {
           const point = nationalPositions[index % nationalPositions.length];
           return (
             <g key={item.name}>
-              <line x1="218" y1="300" x2={point.x} y2={point.y} stroke="#c3cfdb" strokeWidth="1.3" strokeDasharray="3 7" opacity="0.55" />
+              <line x1="218" y1="300" x2={point.x} y2={point.y} stroke="#8da7bf" strokeWidth="1.8" strokeDasharray="4 5" opacity="0.8" />
               <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[(index + 2) % childColors.length]} opacity="0.94" />
               <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} radius={childRadius(item.value)} />
             </g>
