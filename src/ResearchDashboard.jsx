@@ -459,7 +459,9 @@ function BubbleLabel({ x, y, title, value, radius, light = false, kind = "child"
   const words = title.split(" ");
   const lines = keepOneLine || words.length === 1 ? [title] : [words[0], words.slice(1).join(" ")];
   const labelSize = Math.max(10.5, Math.min(kind === "anchor" ? 16 : 14, radius * 0.24));
-  const valueSize = Math.max(7, Math.min(kind === "anchor" ? 12 : 9.5, radius * 0.14));
+  const valueSize = kind === "anchor"
+    ? Math.max(7, Math.min(12, radius * 0.14))
+    : Math.max(9, Math.min(11.5, radius * 0.2));
   const firstDy = lines.length > 1 ? -(labelSize * 0.72) : -(labelSize * 0.42);
   const fill = light ? "#ffffff" : "#102f52";
   return (
