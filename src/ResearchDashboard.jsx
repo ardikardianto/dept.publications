@@ -457,18 +457,18 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
 function BubbleLabel({ x, y, title, value, radius, light = false, kind = "child" }) {
   const words = title.split(" ");
   const lines = words.length > 1 ? [words[0], words.slice(1).join(" ")] : [title];
-  const labelSize = Math.max(7, Math.min(kind === "anchor" ? 12.5 : 9.5, radius * 0.15));
-  const valueSize = Math.max(10, Math.min(kind === "anchor" ? 22 : 14.5, radius * 0.27));
-  const firstDy = lines.length > 1 ? -(labelSize * 0.55) : -(labelSize * 0.2);
+  const labelSize = Math.max(9, Math.min(kind === "anchor" ? 15 : 12, radius * 0.2));
+  const valueSize = Math.max(7, Math.min(kind === "anchor" ? 12 : 9.5, radius * 0.14));
+  const firstDy = lines.length > 1 ? -(labelSize * 0.58) : -(labelSize * 0.24);
   const fill = light ? "#ffffff" : "#102f52";
   return (
     <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill={fill} fontFamily="Inter, ui-sans-serif, system-ui">
       {lines.map((line, index) => (
-        <tspan key={line} x={x} dy={index === 0 ? firstDy : labelSize * 1.12} fontSize={labelSize} fontWeight="700">
+        <tspan key={line} x={x} dy={index === 0 ? firstDy : labelSize * 1.12} fontSize={labelSize} fontWeight="800">
           {line}
         </tspan>
       ))}
-      <tspan x={x} dy={valueSize * 1.02} fontSize={valueSize} fontWeight="800">{value}</tspan>
+      <tspan x={x} dy={labelSize * 1.15} fontSize={valueSize} fontWeight="700">{value}</tspan>
     </text>
   );
 }
