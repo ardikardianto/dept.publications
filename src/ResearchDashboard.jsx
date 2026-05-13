@@ -1064,7 +1064,7 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
                 <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
                 <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
                 <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
-                <th className="px-3 py-4 text-right font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
+                <th className="px-3 py-4 text-center font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
               </tr>
             </thead>
             <tbody>
