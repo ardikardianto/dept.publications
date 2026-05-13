@@ -455,11 +455,12 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
 }
 
 function BubbleLabel({ x, y, title, value, radius, light = false, kind = "child" }) {
+  const keepOneLine = /^Sinta\s+\d$/i.test(title) || title.length <= 11;
   const words = title.split(" ");
-  const lines = words.length > 1 ? [words[0], words.slice(1).join(" ")] : [title];
-  const labelSize = Math.max(9, Math.min(kind === "anchor" ? 15 : 12, radius * 0.2));
+  const lines = keepOneLine || words.length === 1 ? [title] : [words[0], words.slice(1).join(" ")];
+  const labelSize = Math.max(10.5, Math.min(kind === "anchor" ? 16 : 14, radius * 0.24));
   const valueSize = Math.max(7, Math.min(kind === "anchor" ? 12 : 9.5, radius * 0.14));
-  const firstDy = lines.length > 1 ? -(labelSize * 0.58) : -(labelSize * 0.24);
+  const firstDy = lines.length > 1 ? -(labelSize * 0.72) : -(labelSize * 0.42);
   const fill = light ? "#ffffff" : "#102f52";
   return (
     <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill={fill} fontFamily="Inter, ui-sans-serif, system-ui">
@@ -468,7 +469,7 @@ function BubbleLabel({ x, y, title, value, radius, light = false, kind = "child"
           {line}
         </tspan>
       ))}
-      <tspan x={x} dy={labelSize * 1.15} fontSize={valueSize} fontWeight="700">{value}</tspan>
+      <tspan x={x} dy={labelSize * 1.45} fontSize={valueSize} fontWeight="700">{value}</tspan>
     </text>
   );
 }
