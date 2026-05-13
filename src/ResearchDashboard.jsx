@@ -456,19 +456,19 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
 
 function BubbleLabel({ x, y, title, value, radius, light = false, kind = "child" }) {
   const words = title.split(" ");
-  const lines = kind === "child" && words.length > 1 ? [words[0], words.slice(1).join(" ")] : [title];
-  const labelSize = Math.max(7.5, Math.min(kind === "anchor" ? 15 : 11, radius * 0.19));
-  const valueSize = Math.max(11, Math.min(kind === "anchor" ? 26 : 17, radius * 0.34));
-  const firstDy = lines.length > 1 ? -(labelSize * 0.7) : -(labelSize * 0.25);
+  const lines = words.length > 1 ? [words[0], words.slice(1).join(" ")] : [title];
+  const labelSize = Math.max(7, Math.min(kind === "anchor" ? 12.5 : 9.5, radius * 0.15));
+  const valueSize = Math.max(10, Math.min(kind === "anchor" ? 22 : 14.5, radius * 0.27));
+  const firstDy = lines.length > 1 ? -(labelSize * 0.55) : -(labelSize * 0.2);
   const fill = light ? "#ffffff" : "#102f52";
   return (
     <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill={fill} fontFamily="Inter, ui-sans-serif, system-ui">
       {lines.map((line, index) => (
-        <tspan key={line} x={x} dy={index === 0 ? firstDy : labelSize * 1.15} fontSize={labelSize} fontWeight="800">
+        <tspan key={line} x={x} dy={index === 0 ? firstDy : labelSize * 1.12} fontSize={labelSize} fontWeight="700">
           {line}
         </tspan>
       ))}
-      <tspan x={x} dy={valueSize * 1.1} fontSize={valueSize} fontWeight="900">{value}</tspan>
+      <tspan x={x} dy={valueSize * 1.02} fontSize={valueSize} fontWeight="800">{value}</tspan>
     </text>
   );
 }
@@ -493,19 +493,19 @@ function JournalBubbleChart({ publications }) {
       <svg viewBox="0 0 820 430" className="h-full min-h-[22rem] w-full" role="img" aria-label={`Bubble chart with ${internationalTotal} international journals and ${nationalTotal} national journals`}>
         <title>Journal index bubble chart</title>
         <defs>
-          <marker id="bubble-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L8,4 L0,8 Z" fill="#102f52" />
+          <marker id="bubble-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="#315577" />
           </marker>
         </defs>
 
-        <line x1="472" y1="176" x2="540" y2="138" stroke="#102f52" strokeWidth="4" markerEnd="url(#bubble-arrow)" />
-        <line x1="346" y1="250" x2="278" y2="286" stroke="#102f52" strokeWidth="4" markerEnd="url(#bubble-arrow)" />
+        <path d="M474 176 C506 142 520 134 534 130" fill="none" stroke="#315577" strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#bubble-arrow)" />
+        <path d="M346 252 C324 276 306 287 294 292" fill="none" stroke="#315577" strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#bubble-arrow)" />
 
         {internationalItems.map((item, index) => {
           const point = internationalPositions[index % internationalPositions.length];
           return (
             <g key={item.name}>
-              <line x1="610" y1="126" x2={point.x} y2={point.y} stroke="#9fb2c6" strokeWidth="2" strokeDasharray="4 6" />
+              <line x1="610" y1="126" x2={point.x} y2={point.y} stroke="#c3cfdb" strokeWidth="1.3" strokeDasharray="3 7" opacity="0.55" />
               <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[index % childColors.length]} opacity="0.94" />
               <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} radius={childRadius(item.value)} />
             </g>
@@ -516,7 +516,7 @@ function JournalBubbleChart({ publications }) {
           const point = nationalPositions[index % nationalPositions.length];
           return (
             <g key={item.name}>
-              <line x1="218" y1="300" x2={point.x} y2={point.y} stroke="#9fb2c6" strokeWidth="2" strokeDasharray="4 6" />
+              <line x1="218" y1="300" x2={point.x} y2={point.y} stroke="#c3cfdb" strokeWidth="1.3" strokeDasharray="3 7" opacity="0.55" />
               <circle cx={point.x} cy={point.y} r={childRadius(item.value)} fill={childColors[(index + 2) % childColors.length]} opacity="0.94" />
               <BubbleLabel x={point.x} y={point.y} title={item.name} value={item.value} radius={childRadius(item.value)} />
             </g>
@@ -524,10 +524,10 @@ function JournalBubbleChart({ publications }) {
         })}
 
         <circle cx="410" cy="212" r="82" fill="#102f52" />
-        <text x="410" y="202" textAnchor="middle" fill="#ffffff" fontFamily="Georgia, serif" fontSize="21" fontWeight="800" letterSpacing="1.5">
+        <text x="410" y="201" textAnchor="middle" fill="#ffffff" fontFamily="Inter, ui-sans-serif, system-ui" fontSize="15" fontWeight="800" letterSpacing="0.8">
           <tspan x="410">JOURNAL</tspan>
-          <tspan x="410" dy="1.35em">INDEXES</tspan>
-          <tspan x="410" dy="1.45em" fontFamily="Inter, ui-sans-serif, system-ui" fontSize="22">{indexedTotal}</tspan>
+          <tspan x="410" dy="1.25em">INDEXES</tspan>
+          <tspan x="410" dy="1.45em" fontSize="24">{indexedTotal}</tspan>
         </text>
 
         <circle cx="610" cy="126" r="78" fill="#f4d77f" opacity="0.98" />
