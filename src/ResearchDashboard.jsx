@@ -1040,11 +1040,11 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
 
   return (
     <Card variant="neutral" className="mobile-card-table overflow-hidden">
-      <div className="border-b border-[#d7e6f7] p-5">
+      <div className="p-5 pb-4">
         <h1 className="text-2xl font-black text-[#102f52]">Publication pipeline</h1>
         <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
       </div>
-      <div className="p-5 pt-0">
+      <div className="px-2 pb-3 sm:px-3 lg:px-4">
         <div className="publication-table-shell overflow-x-auto rounded-2xl border border-[#d7e6f7]">
           <table className="w-full table-fixed text-left text-sm">
             <colgroup>
