@@ -967,7 +967,7 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" tone="blue" />
+        <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" tone="red" />
         <Stat label="Authors" value={authorCount} icon={Icons.users} note="Unique authors in publications" tone="green" />
         <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" tone="slate" />
         <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" tone="amber" />
