@@ -836,7 +836,7 @@ function LandingPage({ setMode, publications }) {
         className="rounded-[2rem] bg-[#f3f6f7] p-5 shadow-[0_28px_90px_rgba(16,47,82,0.10)] sm:p-7"
       >
         <div className="grid gap-4">
-          <Card variant="sky" className="p-5">
+          <Card variant="neutral" className="p-5">
             <h2 className="mb-3 font-black text-[#102f52]">Five-year output trend</h2>
             <div className="h-56">
               <ResponsiveContainer>
@@ -851,7 +851,7 @@ function LandingPage({ setMode, publications }) {
             </div>
           </Card>
 
-          <Card variant="mint" className="p-5">
+          <Card variant="neutral" className="p-5">
             <h2 className="mb-3 font-black text-[#102f52]">Publications by field</h2>
             <div className="h-56">
               <ResponsiveContainer>
