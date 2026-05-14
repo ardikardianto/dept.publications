@@ -51,7 +51,7 @@ const Icons = {
 const themes = ["Linguistics", "Literature", "Translation"];
 const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
-const palette = ["#91b7df", "#f4d77f", "#8fc8a9", "#e8a993", "#b6a8df", "#9cc8d8"];
+const palette = ["#8fb4d8", "#e4c873", "#b9d3dd", "#d5e4f1", "#f1dfae", "#c5d3e3"];
 
 const researchers = [
   { id: "R-01", name: "Dr. Mira Suryani", role: "Research Lead", theme: "Linguistics", projects: 4, publications: 8, hIndex: 7 },
@@ -368,13 +368,13 @@ async function exportPublicationsToXLSX(items) {
 
 function Card({ children, className = "", variant = "default" }) {
   const variants = {
-    default: "border-transparent bg-[#e7f1f1] shadow-[0_18px_42px_rgba(16,47,82,0.08)]",
-    sky: "border-transparent bg-[#dceced] shadow-[0_18px_42px_rgba(74,124,145,0.14)]",
-    mint: "border-transparent bg-[#dff1e7] shadow-[0_18px_42px_rgba(83,145,113,0.13)]",
-    lemon: "border-transparent bg-[#ffe7a6] shadow-[0_18px_42px_rgba(211,172,62,0.15)]",
-    peach: "border-transparent bg-[#f5d4c8] shadow-[0_18px_42px_rgba(184,121,98,0.13)]",
-    lavender: "border-transparent bg-[#ded3ee] shadow-[0_18px_42px_rgba(128,107,166,0.14)]",
-    rose: "border-transparent bg-[#f8d6e6] shadow-[0_18px_42px_rgba(190,104,145,0.12)]",
+    default: "border-transparent bg-[#e8f0f6] shadow-[0_18px_42px_rgba(16,47,82,0.08)]",
+    sky: "border-transparent bg-[#d8e7f3] shadow-[0_18px_42px_rgba(45,93,132,0.13)]",
+    mint: "border-transparent bg-[#e0ecef] shadow-[0_18px_42px_rgba(53,102,120,0.12)]",
+    lemon: "border-transparent bg-[#f1d889] shadow-[0_18px_42px_rgba(166,131,35,0.14)]",
+    peach: "border-transparent bg-[#f4e4c6] shadow-[0_18px_42px_rgba(145,111,56,0.12)]",
+    lavender: "border-transparent bg-[#dfe8f2] shadow-[0_18px_42px_rgba(66,94,132,0.12)]",
+    rose: "border-transparent bg-[#eadfd4] shadow-[0_18px_42px_rgba(129,94,72,0.11)]",
     neutral: "border-[#d7e6f7] bg-white shadow-[0_14px_34px_rgba(16,47,82,0.08)]",
   };
   return <div className={`rounded-[1.75rem] border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
@@ -432,11 +432,11 @@ function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
     slate: "lavender",
   };
   const iconStyles = {
-    amber: "bg-[#ffe287] text-[#71540f]",
-    blue: "bg-[#d8ecff] text-[#005baa]",
-    green: "bg-[#dff4e9] text-[#315f45]",
-    red: "bg-[#ffe1e7] text-[#8a3a3a]",
-    slate: "bg-[#ece7ff] text-[#4d4f78]",
+    amber: "bg-[#e6c96f] text-[#5c4914]",
+    blue: "bg-[#c8ddeb] text-[#005baa]",
+    green: "bg-[#cfe0df] text-[#315f5d]",
+    red: "bg-[#ead2cb] text-[#7a3f36]",
+    slate: "bg-[#cbd8e6] text-[#31485f]",
   };
   return (
     <Card variant={variants[tone] || "sky"} className="p-5">
@@ -488,7 +488,7 @@ function JournalBubbleChart({ publications }) {
   const nationalPositions = [
     { x: 110, y: 100 }, { x: 104, y: 256 }, { x: 302, y: 112 }, { x: 312, y: 354 }, { x: 164, y: 372 },
   ];
-  const childColors = ["#c6dfef", "#f6d9c8", "#d9cdef", "#c8e6d6", "#f8e49b"];
+  const childColors = ["#d5e4f1", "#f1dfae", "#c5d3e3", "#e0ecef", "#e8f0f6"];
   const childRadius = (value) => Math.min(48, 31 + value * 2.4);
 
   return (
@@ -533,10 +533,10 @@ function JournalBubbleChart({ publications }) {
           <tspan x="410" dy="1.45em" fontSize="24">{indexedTotal}</tspan>
         </text>
 
-        <circle cx="610" cy="126" r="78" fill="#f4d77f" opacity="0.98" />
+        <circle cx="610" cy="126" r="78" fill="#e4c873" opacity="0.98" />
         <BubbleLabel x={610} y={126} title="International Journals" value={internationalTotal} radius={78} kind="anchor" />
 
-        <circle cx="218" cy="300" r="76" fill="#91b7df" opacity="0.98" />
+        <circle cx="218" cy="300" r="76" fill="#8fb4d8" opacity="0.98" />
         <BubbleLabel x={218} y={300} title="National Journals" value={nationalTotal} radius={76} kind="anchor" />
 
         {!indexedTotal && (
@@ -833,7 +833,7 @@ function LandingPage({ setMode, publications }) {
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-[2rem] bg-[#f4f4f2] p-5 shadow-[0_28px_90px_rgba(16,47,82,0.10)] sm:p-7"
+        className="rounded-[2rem] bg-[#f3f6f7] p-5 shadow-[0_28px_90px_rgba(16,47,82,0.10)] sm:p-7"
       >
         <div className="grid gap-4">
           <Card variant="sky" className="p-5">
