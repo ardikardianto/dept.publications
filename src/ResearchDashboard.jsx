@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { readSheet } from "read-excel-file/browser";
 import writeXlsxFile from "write-excel-file/browser";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -840,13 +840,20 @@ function LandingPage({ setMode, publications }) {
             <h2 className="mb-3 font-black text-[#102f52]">Five-year output trend</h2>
             <div className="h-56">
               <ResponsiveContainer>
-                <LineChart data={trendData}>
-                  <CartesianGrid stroke="#d7e6f7" strokeDasharray="3 3" />
+                <AreaChart data={trendData}>
+                  <defs>
+                    <linearGradient id="landingTrendFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1684e8" stopOpacity={0.24} />
+                      <stop offset="70%" stopColor="#1684e8" stopOpacity={0.06} />
+                      <stop offset="100%" stopColor="#1684e8" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="#e6edf4" vertical={false} />
                   <XAxis dataKey="year" tick={{ fill: "#315577", fontSize: 11 }} />
                   <YAxis tick={{ fill: "#315577", fontSize: 11 }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="publications" stroke="#005baa" strokeWidth={3} dot={{ r: 4 }} />
-                </LineChart>
+                  <Area type="monotone" dataKey="publications" stroke="#1684e8" strokeWidth={3.5} fill="url(#landingTrendFill)" dot={false} activeDot={{ r: 5, fill: "#1684e8" }} />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </Card>
@@ -974,21 +981,27 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card variant="sky" className="p-5">
+        <Card variant="neutral" className="p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-black text-[#102f52]">Five-year output trend</h2>
             <Button variant="ghost" onClick={() => setActive("publications")}>{actionLabel}</Button>
           </div>
           <div className="h-80">
             <ResponsiveContainer>
-              <LineChart data={trendData}>
-                <CartesianGrid stroke="#d7e6f7" strokeDasharray="3 3" />
+              <AreaChart data={trendData}>
+                <defs>
+                  <linearGradient id="overviewTrendFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#1684e8" stopOpacity={0.28} />
+                    <stop offset="70%" stopColor="#1684e8" stopOpacity={0.07} />
+                    <stop offset="100%" stopColor="#1684e8" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="#e6edf4" vertical={false} />
                 <XAxis dataKey="year" tick={{ fill: "#315577", fontSize: 12 }} />
                 <YAxis tick={{ fill: "#315577", fontSize: 12 }} />
                 <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="publications" stroke="#005baa" strokeWidth={3} />
-              </LineChart>
+                <Area type="monotone" dataKey="publications" name="Publications" stroke="#1684e8" strokeWidth={3.5} fill="url(#overviewTrendFill)" dot={false} activeDot={{ r: 5, fill: "#1684e8" }} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </Card>
