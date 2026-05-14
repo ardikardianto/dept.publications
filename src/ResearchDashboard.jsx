@@ -967,9 +967,9 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" />
-        <Stat label="Authors" value={authorCount} icon={Icons.users} note="Unique authors in publications" />
-        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" />
+        <Stat label="Publications" value={filteredPublications.length} icon={Icons.book} note="Filtered output count" tone="blue" />
+        <Stat label="Authors" value={authorCount} icon={Icons.users} note="Unique authors in publications" tone="green" />
+        <Stat label="National Journals" value={nationalJournals} icon={Icons.file} note="Sinta 2-6 outputs" tone="slate" />
         <Stat label="International Journals" value={internationalJournals} icon={Icons.award} note="Scopus, EBSCO, Copernicus, DOAJ, ProQuest" tone="amber" />
       </div>
 
@@ -993,7 +993,7 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
           </div>
         </Card>
 
-        <Card variant="mint" className="p-5">
+        <Card variant="neutral" className="p-5">
           <h2 className="mb-4 font-black text-[#102f52]">Publications by field</h2>
           <div className="h-80">
             <ResponsiveContainer>
