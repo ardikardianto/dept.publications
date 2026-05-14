@@ -368,16 +368,16 @@ async function exportPublicationsToXLSX(items) {
 
 function Card({ children, className = "", variant = "default" }) {
   const variants = {
-    default: "border-[#d9e7fb] bg-gradient-to-br from-[#fff8dc] via-[#eef8ff] to-[#f7efff] shadow-[0_16px_42px_rgba(91,132,177,0.12)]",
-    sky: "border-[#cfe3fb] bg-gradient-to-br from-[#eef8ff] via-white to-[#eaf4ff] shadow-[0_16px_42px_rgba(91,132,177,0.13)]",
-    mint: "border-[#cfe9dc] bg-gradient-to-br from-[#effbf5] via-white to-[#e8f7ef] shadow-[0_16px_42px_rgba(111,164,132,0.13)]",
-    lemon: "border-[#f3dfa2] bg-gradient-to-br from-[#fff9dc] via-white to-[#fff1b8] shadow-[0_16px_42px_rgba(214,177,73,0.15)]",
-    peach: "border-[#f1d1c5] bg-gradient-to-br from-[#fff3ec] via-white to-[#ffe9df] shadow-[0_16px_42px_rgba(203,139,111,0.13)]",
-    lavender: "border-[#ddd4f5] bg-gradient-to-br from-[#f7f2ff] via-white to-[#eee8ff] shadow-[0_16px_42px_rgba(145,124,192,0.13)]",
-    rose: "border-[#f2ced8] bg-gradient-to-br from-[#fff1f5] via-white to-[#ffe8ef] shadow-[0_16px_42px_rgba(199,116,141,0.12)]",
+    default: "border-transparent bg-[#e7f1f1] shadow-[0_18px_42px_rgba(16,47,82,0.08)]",
+    sky: "border-transparent bg-[#dceced] shadow-[0_18px_42px_rgba(74,124,145,0.14)]",
+    mint: "border-transparent bg-[#dff1e7] shadow-[0_18px_42px_rgba(83,145,113,0.13)]",
+    lemon: "border-transparent bg-[#ffe7a6] shadow-[0_18px_42px_rgba(211,172,62,0.15)]",
+    peach: "border-transparent bg-[#f5d4c8] shadow-[0_18px_42px_rgba(184,121,98,0.13)]",
+    lavender: "border-transparent bg-[#ded3ee] shadow-[0_18px_42px_rgba(128,107,166,0.14)]",
+    rose: "border-transparent bg-[#f8d6e6] shadow-[0_18px_42px_rgba(190,104,145,0.12)]",
     neutral: "border-[#d7e6f7] bg-white shadow-[0_14px_34px_rgba(16,47,82,0.08)]",
   };
-  return <div className={`rounded-2xl border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
+  return <div className={`rounded-[1.75rem] border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
 }
 
 function Badge({ children, tone = "blue" }) {
@@ -833,7 +833,7 @@ function LandingPage({ setMode, publications }) {
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-[2rem] border border-[#d9e7fb] bg-gradient-to-br from-[#eef8ff] via-[#fff8dc] to-[#f7efff] p-5 shadow-[0_28px_90px_rgba(91,132,177,0.14)] sm:p-7"
+        className="rounded-[2rem] bg-[#f4f4f2] p-5 shadow-[0_28px_90px_rgba(16,47,82,0.10)] sm:p-7"
       >
         <div className="grid gap-4">
           <Card variant="sky" className="p-5">
