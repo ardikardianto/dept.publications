@@ -375,6 +375,7 @@ function Card({ children, className = "", variant = "default" }) {
     peach: "border-transparent bg-[#f4e4c6] shadow-[0_18px_42px_rgba(145,111,56,0.12)]",
     lavender: "border-transparent bg-[#dfe8f2] shadow-[0_18px_42px_rgba(66,94,132,0.12)]",
     rose: "border-transparent bg-[#eadfd4] shadow-[0_18px_42px_rgba(129,94,72,0.11)]",
+    lightBlue: "border-transparent bg-[#eef5ff] shadow-[0_18px_42px_rgba(0,91,170,0.08)]",
     neutral: "border-[#d7e6f7] bg-white shadow-[0_14px_34px_rgba(16,47,82,0.08)]",
   };
   return <div className={`rounded-[1.75rem] border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
@@ -551,7 +552,7 @@ function JournalBubbleChart({ publications }) {
 
 function Filters({ year, setYear, theme, setTheme, query, setQuery, yearOptions = years, themeOptions = themes }) {
   return (
-    <Card variant="mint" className="p-4">
+    <Card variant="lightBlue" className="p-4">
       <div className="grid gap-3 lg:grid-cols-[1fr_180px_220px] lg:items-end">
         <TextSearch value={query} onChange={setQuery} placeholder="Search authors, titles, journals, fields, or indexes..." />
         <Select label="Year" value={year} onChange={setYear} options={["All years", ...yearOptions]} />
@@ -664,7 +665,7 @@ function ArticleDetails({ article, onClose }) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-2xl border border-[#cfe3fb] bg-gradient-to-br from-[#eef8ff] via-white to-[#f7efff] p-5">
+      <div className="rounded-2xl border border-transparent bg-[#eef5ff] p-5 shadow-[0_18px_42px_rgba(0,91,170,0.08)]">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">{article.year}</p>
@@ -921,7 +922,7 @@ function LoginPage({ setMode, onLogin }) {
           <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#c99800]">Admin only</p>
           <p className="mt-1 text-lg font-black text-[#102f52]">Publication data</p>
         </div>
-        <Card variant="lavender" className="relative z-10 ml-auto w-full rounded-[2rem] p-5 shadow-[0_28px_90px_rgba(145,124,192,0.16)] sm:p-7 lg:max-w-md lg:p-8">
+        <Card variant="neutral" className="relative z-10 ml-auto w-full rounded-[2rem] p-5 shadow-[0_28px_90px_rgba(0,91,170,0.10)] sm:p-7 lg:max-w-md lg:p-8">
           <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#005baa]">Restricted access</p>
           <h2 className="mt-2 text-3xl font-black tracking-tight text-[#102f52] sm:text-4xl">Sign in</h2>
           <p className="mt-3 text-base leading-7 text-[#4f6478]">Welcome back! Please sign in to your account.</p>
