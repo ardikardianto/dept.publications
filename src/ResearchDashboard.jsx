@@ -569,7 +569,7 @@ function Modal({ title, children, onClose }) {
         onClick={(event) => event.stopPropagation()}
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[1.75rem] border border-[#ddd4f5] bg-gradient-to-br from-[#fff8dc] via-white to-[#f7efff] p-5 shadow-2xl sm:rounded-[1.75rem]"
+        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[1.75rem] border border-[#d7e6f7] bg-white p-5 shadow-2xl sm:rounded-[1.75rem]"
       >
         <div className="mb-5 flex items-center justify-between gap-4">
           <h2 className="text-xl font-black text-[#102f52]">{title}</h2>
