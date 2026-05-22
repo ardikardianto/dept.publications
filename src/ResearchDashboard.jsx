@@ -838,22 +838,24 @@ function LandingPage({ setMode, publications }) {
       >
         <div className="grid gap-4">
           <Card variant="neutral" className="p-5">
-            <h2 className="mb-3 font-black text-[#102f52]">Five-year output trend</h2>
+            <h2 className="text-xl font-black text-[#102f52]">Five-year output trend</h2>
+            <p className="mt-2 text-sm font-semibold text-[#62757d]">Area fill fades at the left and right edges</p>
             <div className="h-56">
               <ResponsiveContainer>
-                <AreaChart data={trendData}>
+                <AreaChart data={trendData} margin={{ top: 34, right: 18, left: 18, bottom: 4 }}>
                   <defs>
-                    <linearGradient id="landingTrendFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#1684e8" stopOpacity={0.24} />
-                      <stop offset="70%" stopColor="#1684e8" stopOpacity={0.06} />
-                      <stop offset="100%" stopColor="#1684e8" stopOpacity={0} />
+                    <linearGradient id="landingTrendFill" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#55dceb" stopOpacity={0} />
+                      <stop offset="16%" stopColor="#55dceb" stopOpacity={0.26} />
+                      <stop offset="84%" stopColor="#55dceb" stopOpacity={0.26} />
+                      <stop offset="100%" stopColor="#55dceb" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="#e6edf4" vertical={false} />
-                  <XAxis dataKey="year" tick={{ fill: "#315577", fontSize: 11 }} />
-                  <YAxis tick={{ fill: "#315577", fontSize: 11 }} />
+                  <CartesianGrid stroke="#d5dde4" strokeDasharray="7 9" vertical={false} />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "#4f5961", fontSize: 13, fontWeight: 600 }} dy={10} />
+                  <YAxis hide domain={[0, "dataMax + 2"]} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="publications" stroke="#1684e8" strokeWidth={3.5} fill="url(#landingTrendFill)" dot={false} activeDot={{ r: 5, fill: "#1684e8" }} />
+                  <Area type="monotone" dataKey="publications" stroke="#55dceb" strokeWidth={3.5} fill="url(#landingTrendFill)" dot={false} activeDot={{ r: 5, fill: "#55dceb" }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -982,26 +984,30 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card variant="neutral" className="p-5">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="font-black text-[#102f52]">Five-year output trend</h2>
-            <Button variant="ghost" onClick={() => setActive("publications")}>{actionLabel}</Button>
+        <Card variant="neutral" className="p-7">
+          <div className="mb-4 flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-2xl font-black text-[#102f52]">Five-year output trend</h2>
+              <p className="mt-2 text-base font-semibold text-[#62757d]">Area fill fades at the left and right edges</p>
+            </div>
+            <Button variant="secondary" onClick={() => setActive("publications")} className="shrink-0">{actionLabel}</Button>
           </div>
           <div className="h-80">
             <ResponsiveContainer>
-              <AreaChart data={trendData}>
+              <AreaChart data={trendData} margin={{ top: 42, right: 28, left: 28, bottom: 10 }}>
                 <defs>
-                  <linearGradient id="overviewTrendFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#1684e8" stopOpacity={0.28} />
-                    <stop offset="70%" stopColor="#1684e8" stopOpacity={0.07} />
-                    <stop offset="100%" stopColor="#1684e8" stopOpacity={0} />
+                  <linearGradient id="overviewTrendFill" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#55dceb" stopOpacity={0} />
+                    <stop offset="16%" stopColor="#55dceb" stopOpacity={0.3} />
+                    <stop offset="84%" stopColor="#55dceb" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#55dceb" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#e6edf4" vertical={false} />
-                <XAxis dataKey="year" tick={{ fill: "#315577", fontSize: 12 }} />
-                <YAxis tick={{ fill: "#315577", fontSize: 12 }} />
+                <CartesianGrid stroke="#d5dde4" strokeDasharray="7 9" vertical={false} />
+                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "#4f5961", fontSize: 15, fontWeight: 600 }} dy={12} />
+                <YAxis hide domain={[0, "dataMax + 2"]} />
                 <Tooltip />
-                <Area type="monotone" dataKey="publications" name="Publications" stroke="#1684e8" strokeWidth={3.5} fill="url(#overviewTrendFill)" dot={false} activeDot={{ r: 5, fill: "#1684e8" }} />
+                <Area type="monotone" dataKey="publications" name="Publications" stroke="#55dceb" strokeWidth={4} fill="url(#overviewTrendFill)" dot={false} activeDot={{ r: 5, fill: "#55dceb" }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
