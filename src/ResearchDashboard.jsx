@@ -79,6 +79,18 @@ const initialPublications = [
   { authors: "Mira Suryani; Dina Kartika", title: "Tutor talk and student retention signals", venue: "Open Learning Studies", year: "2024", type: "International Proceedings", theme: "Linguistics", status: "Published", url: "https://scholar.google.com/scholar?q=Tutor+talk+and+student+retention+signals+Open+Learning+Studies" },
 ];
 
+const demoPublications = [
+  { authors: "Nadia Putri; Galang Saputra", title: "Digital reading habits in open university English classrooms", venue: "Journal of Distance English Studies", year: "2026", type: "Scopus", theme: "Literature", status: "Published", url: "https://scholar.google.com/scholar?q=Digital+reading+habits+in+open+university+English+classrooms" },
+  { authors: "Bima Hartono; Retno Puspita", title: "Machine translation post-editing in academic course materials", venue: "Indonesian Journal of Translation Pedagogy", year: "2026", type: "Sinta 2", theme: "Translation", status: "Published", url: "https://scholar.google.com/scholar?q=Machine+translation+post-editing+in+academic+course+materials" },
+  { authors: "Laras Wening; Fajar Aditama", title: "Pronunciation feedback patterns in synchronous tutorials", venue: "Asian Journal of Applied Linguistics", year: "2025", type: "EBSCO", theme: "Linguistics", status: "Published", url: "https://scholar.google.com/scholar?q=Pronunciation+feedback+patterns+in+synchronous+tutorials" },
+  { authors: "Maya Saraswati", title: "Women writers and local identity in online literature modules", venue: "Literary Education Review", year: "2025", type: "DOAJ", theme: "Literature", status: "Published", url: "https://scholar.google.com/scholar?q=Women+writers+and+local+identity+in+online+literature+modules" },
+  { authors: "Rendra Wijaya; Kania Maheswari", title: "Student corpus errors in argument essay introductions", venue: "Jurnal Linguistik Terapan Indonesia", year: "2024", type: "Sinta 3", theme: "Linguistics", status: "Published", url: "https://scholar.google.com/scholar?q=Student+corpus+errors+in+argument+essay+introductions" },
+  { authors: "Dewi Anggraini; Salma Yuliani", title: "Subtitling strategies for cultural references in classroom videos", venue: "Translation and Media Proceedings", year: "2024", type: "International Proceedings", theme: "Translation", status: "Published", url: "https://scholar.google.com/scholar?q=Subtitling+strategies+for+cultural+references+in+classroom+videos" },
+  { authors: "Yoga Pratama", title: "Vocabulary growth through mobile-supported extensive reading", venue: "Open Learning Language Journal", year: "2023", type: "ProQuest", theme: "Linguistics", status: "Published", url: "https://scholar.google.com/scholar?q=Vocabulary+growth+through+mobile-supported+extensive+reading" },
+  { authors: "Intan Maharani; Putu Wira", title: "Reader response journals in distance literature learning", venue: "Jurnal Pendidikan Bahasa dan Sastra", year: "2023", type: "Sinta 4", theme: "Literature", status: "Published", url: "https://scholar.google.com/scholar?q=Reader+response+journals+in+distance+literature+learning" },
+  { authors: "Ari Nugroho; Melati Rahma", title: "Terminology banks for bilingual academic administration", venue: "National Seminar on Applied Translation", year: "2022", type: "National Proceedings", theme: "Translation", status: "Published", url: "https://scholar.google.com/scholar?q=Terminology+banks+for+bilingual+academic+administration" },
+];
+
 const grants = [
   { funder: "UT Internal Research Grant", title: "AI Feedback Pilot", amount: 180, year: "2026", status: "Funded" },
   { funder: "BRIN Collaboration", title: "Learner Corpus Infrastructure", amount: 260, year: "2026", status: "Submitted" },
@@ -100,6 +112,9 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const USE_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 const SUPABASE_TOKEN_KEY = "ut_research_supabase_access_token";
 const SUPABASE_USER_KEY = "ut_research_user_email";
+const DEMO_SESSION_KEY = "ut_research_demo_session";
+const DEMO_EMAIL = "demo@ut.ac.id";
+const DEMO_PASSWORD = "demo123";
 const RESEARCH_PUBLICATIONS_TABLE = "research_publications";
 
 function money(value) {
@@ -280,9 +295,11 @@ async function signIn(email, password) {
 function signOut() {
   localStorage.removeItem(SUPABASE_TOKEN_KEY);
   localStorage.removeItem(SUPABASE_USER_KEY);
+  localStorage.removeItem(DEMO_SESSION_KEY);
 }
 
 function getStoredUserEmail() {
+  if (localStorage.getItem(DEMO_SESSION_KEY) === "true") return DEMO_EMAIL;
   return USE_SUPABASE && getAccessToken() ? localStorage.getItem(SUPABASE_USER_KEY) || "" : "";
 }
 
@@ -944,8 +961,14 @@ function LoginPage({ setMode, onLogin }) {
                 <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" className="w-full bg-transparent text-sm text-[#102f52] outline-none placeholder:text-[#8aa0b6]" />
               </div>
             </label>
+            <button type="button" onClick={() => { setEmail(DEMO_EMAIL); setPassword(DEMO_PASSWORD); setError(""); }} className="w-full rounded-2xl border border-[#d7e6f7] bg-[#eef5ff] px-4 py-3 text-sm font-black text-[#102f52] transition hover:bg-[#dcecff]">
+              Use demo account
+            </button>
             {error && <p className="rounded-xl bg-[#fde2e2] px-3 py-2 text-sm font-semibold text-[#8a3a3a]">{error}</p>}
             <Button type="submit" className="w-full !rounded-2xl py-3 text-base" disabled={!email || !password || loading}>{loading ? "Signing in..." : "Sign in"}</Button>
+            <p className="rounded-2xl bg-[#f7fbff] px-4 py-3 text-xs font-semibold leading-5 text-[#4f6478]">
+              Demo: {DEMO_EMAIL} / {DEMO_PASSWORD}. Demo changes stay in this browser session and do not alter Supabase data.
+            </p>
           </form>
         </Card>
       </motion.section>
@@ -1154,11 +1177,17 @@ export default function ResearchDashboard() {
   const filteredPublications = useMemo(() => publications.filter((item) => (year === "All years" || item.year === year) && (theme === "All fields" || item.theme === theme) && [item.authors, item.title, item.venue, item.theme, item.status, item.type].some((value) => includes(value, query))), [publications, year, theme, query]);
   const yearOptions = useMemo(() => uniq([...years, ...publications.map((item) => item.year)]).sort((a, b) => String(b).localeCompare(String(a), undefined, { numeric: true })), [publications]);
   const themeOptions = useMemo(() => uniq([...themes, ...publications.map((item) => item.theme)]), [publications]);
-  const canManagePublications = Boolean(userEmail && userEmail !== "Preview mode" && getAccessToken());
+  const isDemoMode = userEmail === DEMO_EMAIL;
+  const canManagePublications = isDemoMode || Boolean(userEmail && userEmail !== "Preview mode" && getAccessToken());
 
   useEffect(() => {
     let alive = true;
     const loadPublications = async () => {
+      if (localStorage.getItem(DEMO_SESSION_KEY) === "true") {
+        setPublications(demoPublications.map(ensurePublicationId));
+        setDatabaseMessage("Demo mode: showing local dummy data. Supabase data is unchanged.");
+        return;
+      }
       if (!USE_SUPABASE) {
         setDatabaseMessage("Supabase is not configured. Showing sample data.");
         return;
@@ -1180,6 +1209,22 @@ export default function ResearchDashboard() {
   }, []);
 
   const handleLogin = async (email, password) => {
+    if (email.trim().toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
+      localStorage.removeItem(SUPABASE_TOKEN_KEY);
+      localStorage.removeItem(SUPABASE_USER_KEY);
+      localStorage.setItem(DEMO_SESSION_KEY, "true");
+      setUserEmail(DEMO_EMAIL);
+      setPublications(demoPublications.map(ensurePublicationId));
+      setDatabaseMessage("Demo mode: using local dummy data only. Supabase data is unchanged.");
+      setImportMessage("");
+      setYear("All years");
+      setTheme("All fields");
+      setQuery("");
+      setActive("dashboard");
+      setMode("admin");
+      return;
+    }
+    localStorage.removeItem(DEMO_SESSION_KEY);
     const signedInEmail = await signIn(email, password);
     setUserEmail(signedInEmail);
     setActive("dashboard");
@@ -1195,6 +1240,14 @@ export default function ResearchDashboard() {
   const addArticle = async (article) => {
     try {
       if (!canManagePublications) throw new Error("Please sign in before adding an article.");
+      if (isDemoMode) {
+        const saved = ensurePublicationId(article);
+        setPublications((current) => [saved, ...current]);
+        setArticleModal(null);
+        setImportMessage("Demo mode: added 1 local article. Supabase data is unchanged.");
+        setDatabaseMessage("Demo mode: showing local dummy data. Supabase data is unchanged.");
+        return;
+      }
       const saved = await insertResearchPublication(article);
       setPublications((current) => [saved, ...current]);
       setArticleModal(null);
@@ -1208,6 +1261,14 @@ export default function ResearchDashboard() {
   const editArticle = async (original, article) => {
     try {
       if (!canManagePublications) throw new Error("Please sign in before editing an article.");
+      if (isDemoMode) {
+        const saved = ensurePublicationId({ ...article, id: original.id });
+        const identity = publicationIdentity(original);
+        setPublications((current) => current.map((item) => publicationIdentity(item) === identity ? saved : item));
+        setArticleModal(null);
+        setImportMessage("Demo mode: updated 1 local article. Supabase data is unchanged.");
+        return;
+      }
       const saved = await updateResearchPublication(original.id, article);
       const identity = publicationIdentity(original);
       setPublications((current) => current.map((item) => publicationIdentity(item) === identity ? saved : item));
@@ -1226,6 +1287,12 @@ export default function ResearchDashboard() {
     const confirmed = window.confirm(`Delete "${article.title}"?`);
     if (!confirmed) return;
     try {
+      if (isDemoMode) {
+        const identity = publicationIdentity(article);
+        setPublications((current) => current.filter((item) => publicationIdentity(item) !== identity));
+        setImportMessage("Demo mode: deleted 1 local article. Supabase data is unchanged.");
+        return;
+      }
       await deleteResearchPublication(article.id);
       const identity = publicationIdentity(article);
       setPublications((current) => current.filter((item) => publicationIdentity(item) !== identity));
@@ -1261,6 +1328,16 @@ export default function ResearchDashboard() {
       const rows = dataRows.map((dataRow) => Object.fromEntries(headers.map((header, index) => [header, dataRow[index] ?? ""])));
       const imported = rows.map(rowToPublication).filter(Boolean);
       if (!imported.length) throw new Error("No valid rows found. Use Authors, Title, Journal, Field, Year, Index, and URL columns.");
+      if (isDemoMode) {
+        const saved = imported.map(ensurePublicationId);
+        setPublications((current) => [...saved, ...current]);
+        setYear("All years");
+        setTheme("All fields");
+        setQuery("");
+        setImportMessage(`Demo mode: imported ${saved.length} local publication${saved.length === 1 ? "" : "s"}. Supabase data is unchanged.`);
+        setDatabaseMessage("Demo mode: showing local dummy data. Supabase data is unchanged.");
+        return;
+      }
       const saved = await appendResearchPublications(imported);
       setPublications((current) => [...saved, ...current]);
       setYear("All years");
