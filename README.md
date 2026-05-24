@@ -248,11 +248,17 @@ grant insert on public.publication_submissions to anon, authenticated;
 Allow authenticated admins to read and review submissions:
 
 ```sql
+drop policy if exists "Allow authenticated submission read"
+on public.publication_submissions;
+
 create policy "Allow authenticated submission read"
 on public.publication_submissions
 for select
 to authenticated
 using (true);
+
+drop policy if exists "Allow authenticated submission update"
+on public.publication_submissions;
 
 create policy "Allow authenticated submission update"
 on public.publication_submissions
@@ -260,6 +266,10 @@ for update
 to authenticated
 using (true)
 with check (true);
+
+grant select, update on public.publication_submissions to authenticated;
+
+select pg_notify('pgrst', 'reload schema');
 ```
 
 For stricter production use, replace the broad authenticated policies with role-based policies tied to specific admin users.
