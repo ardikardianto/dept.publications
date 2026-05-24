@@ -233,11 +233,16 @@ using (true);
 Allow public visitors to submit publication records for review:
 
 ```sql
+drop policy if exists "Allow public submission insert"
+on public.publication_submissions;
+
 create policy "Allow public submission insert"
 on public.publication_submissions
 for insert
 to anon, authenticated
 with check (status = 'pending');
+
+grant insert on public.publication_submissions to anon, authenticated;
 ```
 
 Allow authenticated admins to read and review submissions:

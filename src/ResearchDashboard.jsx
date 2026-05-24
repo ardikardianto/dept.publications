@@ -298,12 +298,17 @@ async function fetchPublicationSubmissions() {
 }
 
 async function insertPublicationSubmission(submission) {
-  const rows = await supabaseRequest(`/rest/v1/${PUBLICATION_SUBMISSIONS_TABLE}`, {
+  await supabaseRequest(`/rest/v1/${PUBLICATION_SUBMISSIONS_TABLE}`, {
     method: "POST",
-    headers: supabaseHeaders({ preferReturn: true }),
+    headers: supabaseHeaders(),
     body: JSON.stringify(submissionToDb(submission)),
   });
-  return dbToSubmission(rows[0]);
+  return {
+    ...submission,
+    id: createPublicationId(),
+    status: "pending",
+    submittedAt: new Date().toISOString(),
+  };
 }
 
 async function updatePublicationSubmissionStatus(id, status) {
