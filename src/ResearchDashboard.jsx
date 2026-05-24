@@ -53,23 +53,6 @@ const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
 const palette = ["#8fb4d8", "#e4c873", "#b9d3dd", "#d5e4f1", "#f1dfae", "#c5d3e3"];
 
-const researchers = [
-  { id: "R-01", name: "Dr. Mira Suryani", role: "Research Lead", theme: "Linguistics", projects: 4, publications: 8, hIndex: 7 },
-  { id: "R-02", name: "Dr. Ardi Prakoso", role: "Publication Coordinator", theme: "Translation", projects: 3, publications: 11, hIndex: 9 },
-  { id: "R-03", name: "Dina Kartika, M.A.", role: "Grant Officer", theme: "Linguistics", projects: 5, publications: 6, hIndex: 5 },
-  { id: "R-04", name: "Rafi Mahendra, Ph.D.", role: "Methods Advisor", theme: "Linguistics", projects: 3, publications: 10, hIndex: 8 },
-  { id: "R-05", name: "Sinta Wulandari, M.Ed.", role: "Community Research", theme: "Literature", projects: 2, publications: 5, hIndex: 4 },
-];
-
-const projects = [
-  { id: "P-2026-01", title: "AI-supported feedback for online academic writing", theme: "Linguistics", lead: "Dr. Mira Suryani", status: "Active", year: "2026", budget: 180, progress: 72, outputs: 4, deadline: "Aug 2026" },
-  { id: "P-2026-02", title: "Translation quality in open distance learning materials", theme: "Translation", lead: "Dr. Ardi Prakoso", status: "Active", year: "2026", budget: 120, progress: 58, outputs: 3, deadline: "Oct 2026" },
-  { id: "P-2025-03", title: "Formative assessment patterns in blended tutorials", theme: "Linguistics", lead: "Dina Kartika, M.A.", status: "Review", year: "2025", budget: 95, progress: 88, outputs: 5, deadline: "Jun 2026" },
-  { id: "P-2025-04", title: "Corpus mapping of Indonesian EFL learner essays", theme: "Linguistics", lead: "Rafi Mahendra, Ph.D.", status: "Active", year: "2025", budget: 150, progress: 64, outputs: 6, deadline: "Dec 2026" },
-  { id: "P-2024-05", title: "Local literature modules for distance classrooms", theme: "Literature", lead: "Sinta Wulandari, M.Ed.", status: "Completed", year: "2024", budget: 70, progress: 100, outputs: 7, deadline: "Completed" },
-  { id: "P-2024-06", title: "Tutor discourse and student persistence", theme: "Linguistics", lead: "Dr. Mira Suryani", status: "Completed", year: "2024", budget: 85, progress: 100, outputs: 4, deadline: "Completed" },
-];
-
 const initialPublications = [
   { authors: "Mira Suryani; Rafi Mahendra", title: "Automated feedback and learner revision quality", venue: "Journal of Online Language Learning", year: "2026", type: "Scopus", theme: "Linguistics", status: "Accepted", url: "https://scholar.google.com/scholar?q=Automated+feedback+and+learner+revision+quality" },
   { authors: "Ardi Prakoso; Sinta Wulandari", title: "Terminology consistency in translated ODL modules", venue: "Indonesian Translation Review", year: "2026", type: "Sinta 2", theme: "Translation", status: "In press", url: "https://scholar.google.com/scholar?q=Terminology+consistency+in+translated+ODL+modules" },
@@ -91,16 +74,15 @@ const demoPublications = [
   { authors: "Ari Nugroho; Melati Rahma", title: "Terminology banks for bilingual academic administration", venue: "National Seminar on Applied Translation", year: "2022", type: "National Proceedings", theme: "Translation", status: "Published", url: "https://scholar.google.com/scholar?q=Terminology+banks+for+bilingual+academic+administration" },
 ];
 
-const grants = [
-  { funder: "UT Internal Research Grant", title: "AI Feedback Pilot", amount: 180, year: "2026", status: "Funded" },
-  { funder: "BRIN Collaboration", title: "Learner Corpus Infrastructure", amount: 260, year: "2026", status: "Submitted" },
-  { funder: "Community Partnership", title: "Local Literature Modules", amount: 70, year: "2024", status: "Closed" },
-  { funder: "Teaching Innovation Fund", title: "Assessment Analytics", amount: 95, year: "2025", status: "Funded" },
+const demoSubmissions = [
+  { id: "demo-submission-1", applicantName: "Citra Lestari", authors: "Citra Lestari; Raka Pradana", title: "AI-assisted peer review in online writing tutorials", venue: "Journal of Open English Pedagogy", year: "2026", type: "Sinta 2", theme: "Linguistics", status: "pending", url: "https://scholar.google.com/scholar?q=AI-assisted+peer+review+in+online+writing+tutorials", submittedAt: "2026-05-18T08:00:00.000Z" },
+  { id: "demo-submission-2", applicantName: "Bagas Maulana", authors: "Bagas Maulana", title: "Translating cultural humor in student subtitle projects", venue: "Translation Classroom Review", year: "2025", type: "DOAJ", theme: "Translation", status: "pending", url: "https://scholar.google.com/scholar?q=Translating+cultural+humor+in+student+subtitle+projects", submittedAt: "2026-05-20T08:00:00.000Z" },
 ];
 
 const nav = [
   { id: "dashboard", label: "Dashboard", icon: Icons.chart },
   { id: "publications", label: "Publications", icon: Icons.book },
+  { id: "submissions", label: "Submissions", icon: Icons.file },
 ];
 
 const publicationIndexes = ["Scopus", "EBSCO", "Copernicus", "DOAJ", "ProQuest", "Sinta 2", "Sinta 3", "Sinta 4", "Sinta 5", "Sinta 6", "Non-Sinta", "International Proceedings", "National Proceedings"];
@@ -116,10 +98,7 @@ const DEMO_SESSION_KEY = "ut_research_demo_session";
 const DEMO_EMAIL = "demo@ut.ac.id";
 const DEMO_PASSWORD = "demo123";
 const RESEARCH_PUBLICATIONS_TABLE = "research_publications";
-
-function money(value) {
-  return `Rp ${value.toLocaleString("id-ID")}M`;
-}
+const PUBLICATION_SUBMISSIONS_TABLE = "publication_submissions";
 
 function uniq(items) {
   return [...new Set(items.filter(Boolean))];
@@ -277,6 +256,63 @@ async function appendResearchPublications(articles) {
     body: JSON.stringify(articles.map(publicationToDb)),
   });
   return Array.isArray(rows) ? rows.map(dbToPublication) : [];
+}
+
+function dbToSubmission(row) {
+  return {
+    id: row.id,
+    applicantName: row.applicant_name || "",
+    authors: row.authors || "",
+    title: row.title || "",
+    venue: row.journal || "",
+    theme: row.field || themes[0],
+    year: String(row.year || ""),
+    type: row.publication_index || publicationIndexes[0],
+    status: row.status || "pending",
+    url: row.url || "",
+    submittedAt: row.submitted_at || "",
+    reviewedAt: row.reviewed_at || "",
+  };
+}
+
+function submissionToDb(item, status = "pending") {
+  return {
+    applicant_name: item.applicantName || "",
+    authors: item.authors || "",
+    title: item.title || "",
+    journal: item.venue || "",
+    field: item.theme || themes[0],
+    year: Number(item.year) || new Date().getFullYear(),
+    publication_index: item.type || publicationIndexes[0],
+    url: item.url || "",
+    status,
+  };
+}
+
+async function fetchPublicationSubmissions() {
+  const rows = await supabaseRequest(`/rest/v1/${PUBLICATION_SUBMISSIONS_TABLE}?select=*&order=submitted_at.desc,title.asc`, {
+    method: "GET",
+    headers: supabaseHeaders(),
+  });
+  return Array.isArray(rows) ? rows.map(dbToSubmission) : [];
+}
+
+async function insertPublicationSubmission(submission) {
+  const rows = await supabaseRequest(`/rest/v1/${PUBLICATION_SUBMISSIONS_TABLE}`, {
+    method: "POST",
+    headers: supabaseHeaders({ preferReturn: true }),
+    body: JSON.stringify(submissionToDb(submission)),
+  });
+  return dbToSubmission(rows[0]);
+}
+
+async function updatePublicationSubmissionStatus(id, status) {
+  const rows = await supabaseRequest(`/rest/v1/${PUBLICATION_SUBMISSIONS_TABLE}?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: supabaseHeaders({ preferReturn: true }),
+    body: JSON.stringify({ status, reviewed_at: new Date().toISOString() }),
+  });
+  return dbToSubmission(rows[0]);
 }
 
 async function signIn(email, password) {
@@ -677,6 +713,96 @@ function ArticleForm({ initialArticle, onSave, onClose, submitLabel = "Add artic
   );
 }
 
+function SubmissionForm({ onSubmit, message }) {
+  const [form, setForm] = useState({
+    applicantName: "",
+    authors: "",
+    title: "",
+    venue: "",
+    theme: articleThemeOptions[0],
+    year: String(new Date().getFullYear()),
+    type: publicationIndexes[0],
+    url: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const inputClass = "w-full rounded-xl border border-[#d7e6f7] bg-white px-3 py-2.5 text-sm text-[#102f52] outline-none focus:border-[#005baa]";
+  const submit = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    try {
+      const submitted = await onSubmit({
+        ...form,
+        applicantName: form.applicantName.trim(),
+        authors: form.authors.trim(),
+        title: form.title.trim(),
+        venue: form.venue.trim(),
+        year: String(form.year || "").trim(),
+        type: canonicalIndex(form.type),
+        url: form.url.trim(),
+      });
+      if (submitted === false) return;
+      setForm({
+        applicantName: "",
+        authors: "",
+        title: "",
+        venue: "",
+        theme: articleThemeOptions[0],
+        year: String(new Date().getFullYear()),
+        type: publicationIndexes[0],
+        url: "",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={submit} className="space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Applicant name">
+          <input value={form.applicantName} onChange={(event) => update("applicantName", event.target.value)} className={inputClass} placeholder="Your full name" />
+        </Field>
+        <Field label="Year">
+          <input value={form.year} onChange={(event) => update("year", event.target.value)} className={inputClass} placeholder="2026" />
+        </Field>
+      </div>
+      <Field label="Authors">
+        <input value={form.authors} onChange={(event) => update("authors", event.target.value)} className={inputClass} placeholder="Author one; Author two" />
+      </Field>
+      <Field label="Title">
+        <input value={form.title} onChange={(event) => update("title", event.target.value)} className={inputClass} placeholder="Article title" />
+      </Field>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Journal">
+          <input value={form.venue} onChange={(event) => update("venue", event.target.value)} className={inputClass} placeholder="Journal name" />
+        </Field>
+        <Field label="Field">
+          <select value={form.theme} onChange={(event) => update("theme", event.target.value)} className={inputClass}>
+            {articleThemeOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
+        </Field>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Index">
+          <select value={form.type} onChange={(event) => update("type", event.target.value)} className={inputClass}>
+            {publicationIndexes.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
+        </Field>
+        <Field label="Article URL">
+          <input value={form.url} onChange={(event) => update("url", event.target.value)} className={inputClass} placeholder="https://journal.example/article" />
+        </Field>
+      </div>
+      {message && <p className={`rounded-2xl px-4 py-3 text-sm font-semibold ${message.startsWith("Submission received") ? "bg-[#dff3e6] text-[#315f45]" : "bg-[#fde2e2] text-[#8a3a3a]"}`}>{message}</p>}
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting || !form.applicantName.trim() || !form.title.trim() || !form.venue.trim()}>
+          {submitting ? "Submitting..." : "Submit for review"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
 function ArticleDetails({ article, onClose }) {
   const url = publicationUrl(article);
 
@@ -691,6 +817,12 @@ function ArticleDetails({ article, onClose }) {
           <Badge tone={indexTone(article.type)}>{article.type}</Badge>
         </div>
         <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2">
+          {article.applicantName && (
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Applicant</p>
+              <p className="mt-1 text-[#102f52]">{article.applicantName}</p>
+            </div>
+          )}
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Authors</p>
             <p className="mt-1 text-[#102f52]">{article.authors || "-"}</p>
@@ -742,10 +874,52 @@ function DashboardTools({ publications, importMessage, canManage, onAddArticle, 
   );
 }
 
+function SubmissionReview({ submissions, onApprove, onReject, onSee }) {
+  const pending = submissions.filter((item) => item.status === "pending");
+
+  return (
+    <Card variant="neutral" className="overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">Submission Review</p>
+          <h2 className="mt-1 text-2xl font-black text-[#102f52]">Pending publication submissions</h2>
+          <p className="mt-1 text-sm text-[#4f6478]">Review applicant submissions before they appear in public publication data.</p>
+        </div>
+        <Badge tone={pending.length ? "amber" : "green"}>{pending.length} pending</Badge>
+      </div>
+      <div className="space-y-3 px-5 pb-5">
+        {pending.map((item) => (
+          <div key={item.id} className="rounded-2xl border border-[#d7e6f7] bg-[#f7fbff] p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Applicant</p>
+                <p className="mt-1 font-black text-[#102f52]">{item.applicantName || "-"}</p>
+                <h3 className="mt-3 text-lg font-black leading-snug text-[#102f52]">{item.title}</h3>
+                <p className="mt-1 text-sm text-[#4f6478]">{item.authors || "-"} · {item.venue || "-"} · {item.year}</p>
+              </div>
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                <Badge tone={indexTone(item.type)}>{item.type}</Badge>
+                <Badge tone="blue">{item.theme}</Badge>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <Button variant="secondary" onClick={() => onSee(item)}><Icons.eye className="h-4 w-4" />See</Button>
+              <Button variant="secondary" onClick={() => onReject(item)}><Icons.x className="h-4 w-4" />Reject</Button>
+              <Button onClick={() => onApprove(item)}><Icons.check className="h-4 w-4" />Approve</Button>
+            </div>
+          </div>
+        ))}
+        {!pending.length && <p className="rounded-2xl bg-[#f7fbff] p-6 text-center text-sm font-semibold text-[#4f6478]">No pending submissions.</p>}
+      </div>
+    </Card>
+  );
+}
+
 function Header({ active }) {
   const titles = {
     dashboard: ["Research Overview", "Department Dashboard", "Live infographics of publication volume, authors, journal indexes, and research fields."],
     publications: ["Publication Records", "Publications", "Search, filter, sort, and review department journal outputs."],
+    submissions: ["Submission Review", "Publication Submissions", "Approve or reject applicant submissions before public display."],
   };
   const [eyebrow, title, desc] = titles[active] || titles.dashboard;
 
@@ -840,10 +1014,10 @@ function LandingPage({ setMode, publications }) {
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button variant="secondary" onClick={() => setMode("overview")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
           <Button variant="secondary" onClick={() => setMode("publications")} className="!rounded-2xl px-6 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
-          <a href="https://sl.ut.ac.id/publikasi_sasing" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffd23f] px-6 py-3 text-base font-black text-[#102f52] shadow-sm transition hover:bg-[#f3c72f]">
+          <button type="button" onClick={() => setMode("submit")} className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffd23f] px-6 py-3 text-base font-black text-[#102f52] shadow-sm transition hover:bg-[#f3c72f]">
             <Icons.file className="h-5 w-5" />
             Submit Article
-          </a>
+          </button>
         </div>
       </motion.section>
 
@@ -1161,14 +1335,31 @@ function PublicPublicationsPage({ items, onSee }) {
   );
 }
 
+function PublicSubmissionPage({ onSubmit, message }) {
+  return (
+    <div className="mx-auto max-w-4xl space-y-6">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Article Submission</p>
+        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#102f52] sm:text-5xl">Submit a publication</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4f6478]">Submitted records are reviewed by the admin before they appear in the public overview and publication data.</p>
+      </div>
+      <Card variant="neutral" className="p-5">
+        <SubmissionForm onSubmit={onSubmit} message={message} />
+      </Card>
+    </div>
+  );
+}
+
 export default function ResearchDashboard() {
   const [mode, setMode] = useState("landing");
   const [active, setActive] = useState("dashboard");
   const [userEmail, setUserEmail] = useState(() => getStoredUserEmail() || "Preview mode");
   const [publications, setPublications] = useState(() => initialPublications.map(ensurePublicationId));
+  const [submissions, setSubmissions] = useState([]);
   const [articleModal, setArticleModal] = useState(null);
   const [viewArticle, setViewArticle] = useState(null);
   const [importMessage, setImportMessage] = useState("");
+  const [submissionMessage, setSubmissionMessage] = useState("");
   const [databaseMessage, setDatabaseMessage] = useState("Loading publications...");
   const [year, setYear] = useState("All years");
   const [theme, setTheme] = useState("All fields");
@@ -1185,6 +1376,7 @@ export default function ResearchDashboard() {
     const loadPublications = async () => {
       if (localStorage.getItem(DEMO_SESSION_KEY) === "true") {
         setPublications(demoPublications.map(ensurePublicationId));
+        setSubmissions(demoSubmissions);
         setDatabaseMessage("Demo mode: showing local dummy data. Supabase data is unchanged.");
         return;
       }
@@ -1197,6 +1389,14 @@ export default function ResearchDashboard() {
         if (!alive) return;
         setPublications(rows);
         setDatabaseMessage(rows.length ? "" : "No database publications yet. Import XLSX or add a new article.");
+        if (getAccessToken()) {
+          try {
+            const submissionRows = await fetchPublicationSubmissions();
+            if (alive) setSubmissions(submissionRows);
+          } catch {
+            if (alive) setSubmissions([]);
+          }
+        }
       } catch (error) {
         if (!alive) return;
         setDatabaseMessage(error.message || "Could not load publications from Supabase.");
@@ -1215,6 +1415,7 @@ export default function ResearchDashboard() {
       localStorage.setItem(DEMO_SESSION_KEY, "true");
       setUserEmail(DEMO_EMAIL);
       setPublications(demoPublications.map(ensurePublicationId));
+      setSubmissions(demoSubmissions);
       setDatabaseMessage("Demo mode: using local dummy data only. Supabase data is unchanged.");
       setImportMessage("");
       setYear("All years");
@@ -1226,6 +1427,14 @@ export default function ResearchDashboard() {
     }
     localStorage.removeItem(DEMO_SESSION_KEY);
     const signedInEmail = await signIn(email, password);
+    try {
+      const submissionRows = await fetchPublicationSubmissions();
+      setSubmissions(submissionRows);
+      setImportMessage("");
+    } catch {
+      setSubmissions([]);
+      setImportMessage("Submission review is unavailable until the publication_submissions table is created in Supabase.");
+    }
     setUserEmail(signedInEmail);
     setActive("dashboard");
     setMode("admin");
@@ -1234,6 +1443,7 @@ export default function ResearchDashboard() {
   const handleLogout = () => {
     signOut();
     setUserEmail("Preview mode");
+    setSubmissions([]);
     setMode("landing");
   };
 
@@ -1302,9 +1512,75 @@ export default function ResearchDashboard() {
     }
   };
 
+  const submitPublication = async (submission) => {
+    try {
+      setSubmissionMessage("");
+      if (localStorage.getItem(DEMO_SESSION_KEY) === "true") {
+        const saved = { ...submission, id: createPublicationId(), status: "pending", submittedAt: new Date().toISOString() };
+        setSubmissions((current) => [saved, ...current]);
+        setSubmissionMessage("Submission received for demo review. Supabase data is unchanged.");
+        return true;
+      }
+      const saved = await insertPublicationSubmission(submission);
+      setSubmissions((current) => [saved, ...current]);
+      setSubmissionMessage("Submission received. The admin will review it before public display.");
+      return true;
+    } catch (error) {
+      setSubmissionMessage(error.message || "Could not submit this publication.");
+      return false;
+    }
+  };
+
+  const approveSubmission = async (submission) => {
+    try {
+      if (!canManagePublications) throw new Error("Please sign in before approving submissions.");
+      const article = {
+        authors: submission.authors,
+        title: submission.title,
+        venue: submission.venue,
+        theme: submission.theme,
+        year: submission.year,
+        type: submission.type,
+        url: submission.url,
+        status: "Published",
+      };
+      if (isDemoMode) {
+        const saved = ensurePublicationId(article);
+        setPublications((current) => [saved, ...current]);
+        setSubmissions((current) => current.map((item) => item.id === submission.id ? { ...item, status: "approved", reviewedAt: new Date().toISOString() } : item));
+        setImportMessage("Demo mode: approved 1 local submission. Supabase data is unchanged.");
+        return;
+      }
+      const saved = await insertResearchPublication(article);
+      const reviewed = await updatePublicationSubmissionStatus(submission.id, "approved");
+      setPublications((current) => [saved, ...current]);
+      setSubmissions((current) => current.map((item) => item.id === submission.id ? reviewed : item));
+      setImportMessage("Approved 1 submission and published it.");
+    } catch (error) {
+      setImportMessage(error.message || "Could not approve this submission.");
+    }
+  };
+
+  const rejectSubmission = async (submission) => {
+    try {
+      if (!canManagePublications) throw new Error("Please sign in before rejecting submissions.");
+      if (isDemoMode) {
+        setSubmissions((current) => current.map((item) => item.id === submission.id ? { ...item, status: "rejected", reviewedAt: new Date().toISOString() } : item));
+        setImportMessage("Demo mode: rejected 1 local submission. Supabase data is unchanged.");
+        return;
+      }
+      const reviewed = await updatePublicationSubmissionStatus(submission.id, "rejected");
+      setSubmissions((current) => current.map((item) => item.id === submission.id ? reviewed : item));
+      setImportMessage("Rejected 1 submission.");
+    } catch (error) {
+      setImportMessage(error.message || "Could not reject this submission.");
+    }
+  };
+
   const pages = {
     dashboard: <Dashboard filteredPublications={filteredPublications} setActive={setActive} />,
     publications: <Publications items={filteredPublications} canManage={canManagePublications} onEdit={(item) => setArticleModal({ mode: "edit", item })} onDelete={deleteArticle} onSee={setViewArticle} />,
+    submissions: <SubmissionReview submissions={submissions} onApprove={approveSubmission} onReject={rejectSubmission} onSee={setViewArticle} />,
   };
 
   const exportPublications = async () => {
@@ -1367,6 +1643,8 @@ export default function ResearchDashboard() {
               <PublicPublicationsPage items={filteredPublications} onSee={setViewArticle} />
             </div>
           )
+          : mode === "submit"
+            ? <PublicSubmissionPage onSubmit={submitPublication} message={submissionMessage} />
           : <LandingPage setMode={setMode} publications={publications} />;
 
     return (

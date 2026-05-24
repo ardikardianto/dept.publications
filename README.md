@@ -15,6 +15,8 @@ It also includes a safe demo account for presentations. Demo mode uses local dum
 - Overview dashboard with publication metrics, author count, five-year trend, field chart, and journal index bubble chart.
 - Publications table with search, filters, sorting, and article detail pop-up.
 - Admin dashboard with add, edit, delete, XLSX import, and XLSX export.
+- Public article submission form with applicant name and publication details.
+- Admin submission review page for approving or rejecting pending records before publication.
 - Supabase integration using the `research_publications` table.
 - Safe demo mode for presentations.
 - Responsive desktop and mobile layout.
@@ -101,7 +103,7 @@ Password: demo123
 
 You can also click the `Use demo account` button on the login page.
 
-Demo mode loads local dummy publications and allows local add, edit, delete, import, and export behavior. These changes stay in the browser session and do not write to Supabase.
+Demo mode loads local dummy publications and pending submissions. It allows local add, edit, delete, import, export, approve, and reject behavior. These changes stay in the browser session and do not write to Supabase.
 
 ## Environment Variables
 
@@ -140,6 +142,32 @@ create table if not exists public.research_publications (
 );
 ```
 
+Create a second table for public submissions:
+
+```text
+publication_submissions
+```
+
+Recommended SQL:
+
+```sql
+create table if not exists public.publication_submissions (
+  id uuid primary key default gen_random_uuid(),
+  applicant_name text not null,
+  authors text not null default '',
+  title text not null,
+  journal text not null,
+  field text not null default 'Linguistics',
+  year integer not null,
+  publication_index text not null default 'Non-Sinta',
+  url text default '',
+  status text not null default 'pending'
+    check (status in ('pending', 'approved', 'rejected')),
+  submitted_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+```
+
 The app maps Supabase columns into UI fields like this:
 
 ```text
@@ -152,12 +180,22 @@ publication_index   -> Index
 url                 -> Article Link
 ```
 
+The submission table uses the same publication fields, plus:
+
+```text
+applicant_name      -> Applicant name for admin review
+status              -> pending, approved, or rejected
+submitted_at        -> Submission timestamp
+reviewed_at         -> Approval/rejection timestamp
+```
+
 ## Row Level Security
 
 Enable Row Level Security for the table:
 
 ```sql
 alter table public.research_publications enable row level security;
+alter table public.publication_submissions enable row level security;
 ```
 
 Allow public read access:
@@ -190,6 +228,33 @@ on public.research_publications
 for delete
 to authenticated
 using (true);
+```
+
+Allow public visitors to submit publication records for review:
+
+```sql
+create policy "Allow public submission insert"
+on public.publication_submissions
+for insert
+to anon, authenticated
+with check (status = 'pending');
+```
+
+Allow authenticated admins to read and review submissions:
+
+```sql
+create policy "Allow authenticated submission read"
+on public.publication_submissions
+for select
+to authenticated
+using (true);
+
+create policy "Allow authenticated submission update"
+on public.publication_submissions
+for update
+to authenticated
+using (true)
+with check (true);
 ```
 
 For stricter production use, replace the broad authenticated policies with role-based policies tied to specific admin users.
