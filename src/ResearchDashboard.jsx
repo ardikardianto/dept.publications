@@ -51,7 +51,7 @@ const Icons = {
 const themes = ["Linguistics", "Literature", "Translation"];
 const articleThemeOptions = themes;
 const years = ["2026", "2025", "2024"];
-const palette = ["#8fb4d8", "#e4c873", "#b9d3dd", "#d5e4f1", "#f1dfae", "#c5d3e3"];
+const palette = ["#005baa", "#ffd23f", "#8fb4d8", "#102f52", "#cbb26a", "#aebfd2"];
 
 const initialPublications = [
   { authors: "Mira Suryani; Rafi Mahendra", title: "Automated feedback and learner revision quality", venue: "Journal of Online Language Learning", year: "2026", type: "Scopus", theme: "Linguistics", status: "Accepted", url: "https://scholar.google.com/scholar?q=Automated+feedback+and+learner+revision+quality" },
@@ -425,49 +425,50 @@ async function exportPublicationsToXLSX(items) {
 }
 
 function Card({ children, className = "", variant = "default" }) {
+  // One restrained surface for everything; the loud pastel deck is gone.
   const variants = {
-    default: "border-transparent bg-[#e8f0f6] shadow-[0_18px_42px_rgba(16,47,82,0.08)]",
-    sky: "border-transparent bg-[#d8e7f3] shadow-[0_18px_42px_rgba(45,93,132,0.13)]",
-    mint: "border-transparent bg-[#e0ecef] shadow-[0_18px_42px_rgba(53,102,120,0.12)]",
-    lemon: "border-transparent bg-[#f1d889] shadow-[0_18px_42px_rgba(166,131,35,0.14)]",
-    peach: "border-transparent bg-[#f4e4c6] shadow-[0_18px_42px_rgba(145,111,56,0.12)]",
-    lavender: "border-transparent bg-[#dfe8f2] shadow-[0_18px_42px_rgba(66,94,132,0.12)]",
-    rose: "border-transparent bg-[#eadfd4] shadow-[0_18px_42px_rgba(129,94,72,0.11)]",
-    lightBlue: "border-transparent bg-[#eef5ff] shadow-[0_18px_42px_rgba(0,91,170,0.08)]",
-    neutral: "border-[#d7e6f7] bg-white shadow-[0_14px_34px_rgba(16,47,82,0.08)]",
+    default: "border-[var(--border)] bg-[var(--surface)]",
+    sky: "border-[var(--border)] bg-[var(--surface)]",
+    mint: "border-[var(--border)] bg-[var(--surface)]",
+    lemon: "border-[var(--border)] bg-[var(--surface)]",
+    peach: "border-[var(--border)] bg-[var(--surface)]",
+    lavender: "border-[var(--border)] bg-[var(--surface)]",
+    rose: "border-[var(--border)] bg-[var(--surface)]",
+    lightBlue: "border-[var(--border)] bg-[var(--surface-soft)]",
+    neutral: "border-[var(--border)] bg-[var(--surface)]",
   };
-  return <div className={`rounded-[1.75rem] border ${variants[variant] || variants.default} ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border shadow-[0_1px_2px_rgba(16,47,82,0.04)] ${variants[variant] || variants.default} ${className}`}>{children}</div>;
 }
 
 function Badge({ children, tone = "blue" }) {
   const tones = {
-    amber: "border-[#f3dda2] bg-[#fff0c2] text-[#71540f]",
-    blue: "border-[#c7dbf2] bg-[#dcecff] text-[#315577]",
-    green: "border-[#c6e3d1] bg-[#dff3e6] text-[#315f45]",
-    red: "border-[#f3caca] bg-[#fde2e2] text-[#8a3a3a]",
-    slate: "border-[#dce9e6] bg-[#eef3f2] text-[#4d5d66]",
+    amber: "bg-[var(--gold-soft)] text-[#7a5a12]",
+    blue: "bg-[var(--accent-soft)] text-[var(--accent)]",
+    green: "bg-[#e7f0e9] text-[#356048]",
+    red: "bg-[#f5e6e3] text-[#9a4338]",
+    slate: "bg-[#ece9e2] text-[var(--ink-soft)]",
   };
-  return <span className={`inline-flex items-center rounded-lg border px-2 py-1 text-xs font-medium ${tones[tone] || tones.blue}`}>{children}</span>;
+  return <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${tones[tone] || tones.blue}`}>{children}</span>;
 }
 
 function Button({ children, variant = "primary", className = "", ...props }) {
   const styles = {
-    primary: "bg-[#005baa] text-white hover:bg-[#004984]",
-    secondary: "border border-[#d7e6f7] bg-white text-[#102f52] hover:bg-[#f4f9ff]",
-    ghost: "bg-transparent text-[#315577] hover:bg-[#eef5ff]",
+    primary: "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]",
+    secondary: "border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-soft)]",
+    ghost: "bg-transparent text-[var(--ink-soft)] hover:bg-[var(--accent-soft)]",
   };
-  return <button className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`} {...props}>{children}</button>;
+  return <button className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`} {...props}>{children}</button>;
 }
 
 function Select({ label, value, onChange, options }) {
   return (
     <label className="space-y-1.5">
-      <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#315577]">{label}</span>
+      <span className="eyebrow">{label}</span>
       <div className="relative">
-        <select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full appearance-none rounded-xl border border-[#d7e6f7] bg-white px-3 pr-9 text-sm text-[#102f52] outline-none focus:border-[#005baa]">
+        <select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full appearance-none rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 pr-9 text-sm text-[var(--ink)] outline-none transition-colors focus:border-[var(--accent)]">
           {options.map((option) => <option key={option} value={option}>{option}</option>)}
         </select>
-        <Icons.chevronDown className="pointer-events-none absolute right-3 top-3.5 h-4 w-4 text-[#6f90af]" />
+        <Icons.chevronDown className="pointer-events-none absolute right-3 top-3.5 h-4 w-4 text-[var(--ink-muted)]" />
       </div>
     </label>
   );
@@ -475,40 +476,29 @@ function Select({ label, value, onChange, options }) {
 
 function TextSearch({ value, onChange, placeholder }) {
   return (
-    <label className="flex h-11 items-center gap-3 rounded-xl border border-[#d7e6f7] bg-white px-3">
-      <Icons.search className="h-4 w-4 text-[#6f90af]" />
-      <input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="w-full bg-transparent text-sm text-[#102f52] outline-none placeholder:text-[#8aa0b6]" />
+    <label className="flex h-11 items-center gap-3 rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 transition-colors focus-within:border-[var(--accent)]">
+      <Icons.search className="h-4 w-4 text-[var(--ink-muted)]" />
+      <input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-muted)]" />
     </label>
   );
 }
 
 function Stat({ label, value, note, icon: Icon, tone = "blue" }) {
-  const variants = {
-    amber: "lemon",
-    blue: "sky",
-    green: "mint",
-    red: "rose",
-    slate: "lavender",
-  };
   const iconStyles = {
-    amber: "bg-[#e6c96f] text-[#5c4914]",
-    blue: "bg-[#c8ddeb] text-[#005baa]",
-    green: "bg-[#cfe0df] text-[#315f5d]",
-    red: "bg-[#ead2cb] text-[#7a3f36]",
-    slate: "bg-[#cbd8e6] text-[#31485f]",
+    amber: "bg-[var(--gold-soft)] text-[#7a5a12]",
+    blue: "bg-[var(--accent-soft)] text-[var(--accent)]",
+    green: "bg-[#e7f0e9] text-[#356048]",
+    red: "bg-[#f5e6e3] text-[#9a4338]",
+    slate: "bg-[#ece9e2] text-[var(--ink-soft)]",
   };
   return (
-    <Card variant={variants[tone] || "sky"} className="p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#315577]">{label}</p>
-          <p className="mt-3 text-4xl font-light text-[#102f52]">{value}</p>
-          {note && <p className="mt-1 text-xs text-[#4f6478]">{note}</p>}
-        </div>
-        <span className={`rounded-xl p-3 ${iconStyles[tone] || iconStyles.blue}`}>
-          <Icon />
-        </span>
-      </div>
+    <Card className="p-5">
+      <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconStyles[tone] || iconStyles.blue}`}>
+        <Icon className="h-[1.05rem] w-[1.05rem]" />
+      </span>
+      <p className="display mt-4 text-[2.5rem] leading-none text-[var(--ink)]">{value}</p>
+      <p className="mt-2 text-sm font-medium text-[var(--ink)]">{label}</p>
+      {note && <p className="mt-0.5 text-xs leading-5 text-[var(--ink-muted)]">{note}</p>}
     </Card>
   );
 }
@@ -547,11 +537,11 @@ function JournalBubbleChart({ publications }) {
   const nationalPositions = [
     { x: 110, y: 100 }, { x: 104, y: 256 }, { x: 302, y: 112 }, { x: 312, y: 354 }, { x: 164, y: 372 },
   ];
-  const childColors = ["#d5e4f1", "#f1dfae", "#c5d3e3", "#e0ecef", "#e8f0f6"];
+  const childColors = ["#dbe6f1", "#f3e7c2", "#cdd9e6", "#e4ebf2", "#eef1f5"];
   const childRadius = (value) => Math.min(48, 31 + value * 2.4);
 
   return (
-    <div className="overflow-hidden rounded-[1.5rem] bg-[#fbfcff]">
+    <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-soft)]">
       <svg viewBox="0 0 820 430" className="h-full min-h-[22rem] w-full" role="img" aria-label={`Bubble chart with ${internationalTotal} international journals and ${nationalTotal} national journals`}>
         <title>Journal index bubble chart</title>
         <defs>
@@ -622,16 +612,16 @@ function Filters({ year, setYear, theme, setTheme, query, setQuery, yearOptions 
 
 function Modal({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#102f52]/30 p-0 sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#102f52]/25 p-0 backdrop-blur-[2px] sm:items-center sm:p-4" onClick={onClose}>
       <motion.div
         onClick={(event) => event.stopPropagation()}
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[1.75rem] border border-[#d7e6f7] bg-white p-5 shadow-2xl sm:rounded-[1.75rem]"
+        className="mobile-modal__panel max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_24px_60px_rgba(16,47,82,0.18)] sm:rounded-2xl"
       >
-        <div className="mb-5 flex items-center justify-between gap-4">
-          <h2 className="text-xl font-black text-[#102f52]">{title}</h2>
-          <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eef5ff] text-[#315577] hover:bg-[#dcecff]" aria-label="Close">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <h2 className="display text-2xl text-[var(--ink)]">{title}</h2>
+          <button type="button" onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--ink-soft)] transition-colors hover:bg-[var(--surface-soft)]" aria-label="Close">
             <Icons.x className="h-5 w-5" />
           </button>
         </div>
@@ -644,7 +634,7 @@ function Modal({ title, children, onClose }) {
 function Field({ label, children }) {
   return (
     <label className="space-y-1.5">
-      <span className="text-xs font-bold text-[#315577]">{label}</span>
+      <span className="block text-xs font-medium text-[var(--ink-soft)]">{label}</span>
       {children}
     </label>
   );
@@ -664,7 +654,7 @@ function ArticleForm({ initialArticle, onSave, onClose, submitLabel = "Add artic
     ...initialArticle,
   });
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const inputClass = "w-full rounded-xl border border-[#d7e6f7] bg-white px-3 py-2.5 text-sm text-[#102f52] outline-none focus:border-[#005baa]";
+  const inputClass = "w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--ink)] outline-none transition-colors focus:border-[var(--accent)]";
   const save = () => {
     onSave({
       ...form,
@@ -731,7 +721,7 @@ function SubmissionForm({ onSubmit, message }) {
   });
   const [submitting, setSubmitting] = useState(false);
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const inputClass = "w-full rounded-xl border border-[#d7e6f7] bg-white px-3 py-2.5 text-sm text-[#102f52] outline-none focus:border-[#005baa]";
+  const inputClass = "w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--ink)] outline-none transition-colors focus:border-[var(--accent)]";
   const submit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
@@ -798,7 +788,7 @@ function SubmissionForm({ onSubmit, message }) {
           <input value={form.url} onChange={(event) => update("url", event.target.value)} className={inputClass} placeholder="https://journal.example/article" />
         </Field>
       </div>
-      {message && <p className={`rounded-2xl px-4 py-3 text-sm font-semibold ${message.startsWith("Submission received") ? "bg-[#dff3e6] text-[#315f45]" : "bg-[#fde2e2] text-[#8a3a3a]"}`}>{message}</p>}
+      {message && <p className={`rounded-lg px-4 py-3 text-sm font-medium ${message.startsWith("Submission received") ? "bg-[#e7f0e9] text-[#356048]" : "bg-[#f5e6e3] text-[#9a4338]"}`}>{message}</p>}
       <div className="flex justify-end">
         <Button type="submit" disabled={submitting || !form.applicantName.trim() || !form.title.trim() || !form.venue.trim()}>
           {submitting ? "Submitting..." : "Submit for review"}
@@ -812,37 +802,37 @@ function ArticleDetails({ article, onClose }) {
   const url = publicationUrl(article);
 
   return (
-    <div className="space-y-5">
-      <div className="rounded-2xl border border-transparent bg-[#eef5ff] p-5 shadow-[0_18px_42px_rgba(0,91,170,0.08)]">
+    <div className="space-y-6">
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">{article.year}</p>
-            <h3 className="mt-2 text-2xl font-black leading-tight text-[#102f52]">{article.title}</h3>
+            <p className="text-sm font-medium text-[var(--ink-soft)]">{article.year}</p>
+            <h3 className="display mt-2 text-2xl leading-tight text-[var(--ink)]">{article.title}</h3>
           </div>
           <Badge tone={indexTone(article.type)}>{article.type}</Badge>
         </div>
-        <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2">
+        <div className="mt-6 grid gap-5 text-sm sm:grid-cols-2">
           {article.applicantName && (
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Applicant</p>
-              <p className="mt-1 text-[#102f52]">{article.applicantName}</p>
+              <p className="eyebrow">Applicant</p>
+              <p className="mt-1.5 text-[var(--ink)]">{article.applicantName}</p>
             </div>
           )}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Authors</p>
-            <p className="mt-1 text-[#102f52]">{article.authors || "-"}</p>
+            <p className="eyebrow">Authors</p>
+            <p className="mt-1.5 text-[var(--ink)]">{article.authors || "-"}</p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Journal</p>
-            <p className="mt-1 text-[#102f52]">{article.venue}</p>
+            <p className="eyebrow">Journal</p>
+            <p className="mt-1.5 text-[var(--ink)]">{article.venue}</p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Field</p>
-            <p className="mt-1 text-[#102f52]">{article.theme}</p>
+            <p className="eyebrow">Field</p>
+            <p className="mt-1.5 text-[var(--ink)]">{article.theme}</p>
           </div>
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Article Link</p>
-            <a href={url} target="_blank" rel="noreferrer" className="mt-1 inline-flex max-w-full items-center gap-2 break-all font-black text-[#005baa] hover:underline">
+          <div className="sm:col-span-2">
+            <p className="eyebrow">Article Link</p>
+            <a href={url} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex max-w-full items-center gap-2 break-all font-medium text-[var(--accent)] hover:underline">
               <Icons.eye className="h-4 w-4 shrink-0" />
               {url}
             </a>
@@ -858,14 +848,14 @@ function ArticleDetails({ article, onClose }) {
 
 function DashboardTools({ publications, importMessage, canManage, onAddArticle, onExport, onImport, onRequireLogin }) {
   return (
-    <Card variant="lemon" className="p-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <Card className="p-5">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">Publication Data</p>
-          <p className="mt-1 text-sm text-[#4f6478]">{canManage ? "Import, export, or add article records in Supabase." : "Sign in first to import, add, edit, or delete records."}</p>
+          <p className="text-sm font-semibold text-[var(--ink)]">Publication data</p>
+          <p className="mt-1 text-sm text-[var(--ink-soft)]">{canManage ? "Import, export, or add article records in Supabase." : "Sign in first to import, add, edit, or delete records."}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <label onClick={(event) => !canManage && (event.preventDefault(), onRequireLogin?.())} className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#d7e6f7] bg-white px-4 py-2.5 text-sm font-semibold text-[#102f52] transition ${canManage ? "cursor-pointer hover:bg-[#f4f9ff]" : "cursor-not-allowed opacity-55"}`}>
+          <label onClick={(event) => !canManage && (event.preventDefault(), onRequireLogin?.())} className={`inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--ink)] transition-colors ${canManage ? "cursor-pointer hover:bg-[var(--surface-soft)]" : "cursor-not-allowed opacity-55"}`}>
             <Icons.upload className="h-4 w-4" />
             Import XLSX
             <input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onImport} disabled={!canManage} />
@@ -874,7 +864,7 @@ function DashboardTools({ publications, importMessage, canManage, onAddArticle, 
           <Button onClick={canManage ? onAddArticle : onRequireLogin} disabled={!canManage}><Icons.plus className="h-4 w-4" />Add new article</Button>
         </div>
       </div>
-      {importMessage && <p className={`mt-3 rounded-xl px-3 py-2 text-sm font-semibold ${["Imported", "Added", "Exported", "Updated", "Deleted"].some((word) => importMessage.startsWith(word)) ? "bg-[#dff3e6] text-[#315f45]" : "bg-[#fde2e2] text-[#8a3a3a]"}`}>{importMessage}</p>}
+      {importMessage && <p className={`mt-4 rounded-lg px-3 py-2 text-sm font-medium ${["Imported", "Added", "Exported", "Updated", "Deleted"].some((word) => importMessage.startsWith(word)) ? "bg-[#e7f0e9] text-[#356048]" : "bg-[#f5e6e3] text-[#9a4338]"}`}>{importMessage}</p>}
     </Card>
   );
 }
@@ -883,24 +873,24 @@ function SubmissionReview({ submissions, onApprove, onReject, onSee }) {
   const pending = submissions.filter((item) => item.status === "pending");
 
   return (
-    <Card variant="neutral" className="overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+    <Card className="overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] p-6">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#005baa]">Submission Review</p>
-          <h2 className="mt-1 text-2xl font-black text-[#102f52]">Pending publication submissions</h2>
-          <p className="mt-1 text-sm text-[#4f6478]">Review applicant submissions before they appear in public publication data.</p>
+          <p className="eyebrow">Submission review</p>
+          <h2 className="display mt-1.5 text-2xl text-[var(--ink)]">Pending publication submissions</h2>
+          <p className="mt-1.5 text-sm text-[var(--ink-soft)]">Review applicant submissions before they appear in public publication data.</p>
         </div>
         <Badge tone={pending.length ? "amber" : "green"}>{pending.length} pending</Badge>
       </div>
-      <div className="space-y-3 px-5 pb-5">
+      <div className="space-y-3 p-6">
         {pending.map((item) => (
-          <div key={item.id} className="rounded-2xl border border-[#d7e6f7] bg-[#f7fbff] p-4">
+          <div key={item.id} className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#315577]">Applicant</p>
-                <p className="mt-1 font-black text-[#102f52]">{item.applicantName || "-"}</p>
-                <h3 className="mt-3 text-lg font-black leading-snug text-[#102f52]">{item.title}</h3>
-                <p className="mt-1 text-sm text-[#4f6478]">{item.authors || "-"} · {item.venue || "-"} · {item.year}</p>
+                <p className="eyebrow">Applicant</p>
+                <p className="mt-1 font-medium text-[var(--ink)]">{item.applicantName || "-"}</p>
+                <h3 className="display mt-3 text-lg leading-snug text-[var(--ink)]">{item.title}</h3>
+                <p className="mt-1 text-sm text-[var(--ink-soft)]">{item.authors || "-"} · {item.venue || "-"} · {item.year}</p>
               </div>
               <div className="flex flex-wrap items-center justify-end gap-2">
                 <Badge tone={indexTone(item.type)}>{item.type}</Badge>
@@ -914,7 +904,7 @@ function SubmissionReview({ submissions, onApprove, onReject, onSee }) {
             </div>
           </div>
         ))}
-        {!pending.length && <p className="rounded-2xl bg-[#f7fbff] p-6 text-center text-sm font-semibold text-[#4f6478]">No pending submissions.</p>}
+        {!pending.length && <p className="rounded-xl bg-[var(--surface-soft)] p-6 text-center text-sm text-[var(--ink-soft)]">No pending submissions.</p>}
       </div>
     </Card>
   );
@@ -929,10 +919,10 @@ function Header({ active }) {
   const [eyebrow, title, desc] = titles[active] || titles.dashboard;
 
   return (
-    <div className="mb-6">
-      <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">{eyebrow}</p>
-      <h1 className="mt-1 text-3xl font-black tracking-tight text-[#102f52] md:text-4xl">{title}</h1>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4f6478]">{desc}</p>
+    <div className="mb-8">
+      <p className="eyebrow">{eyebrow}</p>
+      <h1 className="display mt-2 text-3xl text-[var(--ink)] md:text-4xl">{title}</h1>
+      <p className="mt-2.5 max-w-3xl text-sm leading-6 text-[var(--ink-soft)]">{desc}</p>
     </div>
   );
 }
@@ -940,19 +930,19 @@ function Header({ active }) {
 function FloatingBottomNav({ active, setActive, onLogout, logoutLabel = "Logout" }) {
   return (
     <nav className="mobile-bottom-nav fixed inset-x-0 bottom-4 z-40 flex justify-center px-3 sm:bottom-6 sm:px-6">
-      <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-2xl border border-[#d7e6f7] bg-white/95 p-1.5 shadow-[0_18px_48px_rgba(0,91,170,0.14)] backdrop-blur-xl">
+      <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--surface)]/95 p-1.5 shadow-[0_8px_28px_rgba(16,47,82,0.12)] backdrop-blur-xl">
         {nav.map((item) => {
           const Icon = item.icon;
           const selected = active === item.id;
           return (
-            <button key={item.id} title={item.label} type="button" onClick={() => setActive(item.id)} className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-xs font-black transition sm:px-4 sm:text-sm ${selected ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-[#eef5ff] hover:text-[#005baa]"}`}>
-              <Icon className="h-5 w-5" />
+            <button key={item.id} title={item.label} type="button" onClick={() => setActive(item.id)} className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors sm:px-4 ${selected ? "bg-[var(--ink)] text-white" : "text-[var(--ink-soft)] hover:bg-[var(--surface-soft)]"}`}>
+              <Icon className="h-[1.05rem] w-[1.05rem]" />
               <span>{item.label}</span>
             </button>
           );
         })}
-        <button type="button" onClick={onLogout} className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-xs font-black text-[#315577] transition hover:bg-[#eef5ff] hover:text-[#005baa] sm:px-4 sm:text-sm">
-          <Icons.logOut className="h-5 w-5" />
+        <button type="button" onClick={onLogout} className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg px-3 text-sm font-medium text-[var(--ink-soft)] transition-colors hover:bg-[var(--surface-soft)] sm:px-4">
+          <Icons.logOut className="h-[1.05rem] w-[1.05rem]" />
           <span>{logoutLabel}</span>
         </button>
       </div>
@@ -961,42 +951,82 @@ function FloatingBottomNav({ active, setActive, onLogout, logoutLabel = "Logout"
 }
 
 
-function PublicShell({ mode, setMode, children }) {
+function Footer() {
   return (
-    <div className="min-h-screen bg-white px-4 py-4 text-[#102f52] sm:px-7 lg:px-10">
-      <div className="mx-auto max-w-7xl">
-        <motion.nav
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="mx-auto flex min-h-20 w-full max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-[#d7e6f7] bg-white px-5 py-4 shadow-[0_22px_70px_rgba(0,91,170,0.10)] sm:px-7 lg:px-9"
-        >
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#005baa] text-[#ffd23f] shadow-[0_10px_24px_rgba(0,91,170,0.16)] sm:h-14 sm:w-14">
-              <Icons.graduation className="h-6 w-6 sm:h-7 sm:w-7" />
-            </span>
-            <div>
-              <p className="text-2xl font-black leading-none tracking-tight text-[#102f52] sm:text-[2rem]">Universitas Terbuka</p>
-              <p className="mt-1 text-[9px] font-black uppercase tracking-[0.34em] text-[#005baa] sm:text-[0.68rem]">English Department</p>
-            </div>
-          </div>
-          <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-[#eef5ff] p-1 text-sm font-black">
-            <button type="button" onClick={() => setMode("landing")} aria-label="Home" title="Home" className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition ${mode === "landing" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
-              <Icons.home className="h-4 w-4" />
-            </button>
-            <button type="button" onClick={() => setMode("overview")} className={`shrink-0 rounded-full px-4 py-2 transition sm:px-5 ${mode === "overview" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
-              Overview
-            </button>
-            <button type="button" onClick={() => setMode("publications")} className={`shrink-0 rounded-full px-4 py-2 transition sm:px-5 ${mode === "publications" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
-              Publications
-            </button>
-            <button type="button" onClick={() => setMode("login")} className={`shrink-0 rounded-full px-4 py-2 transition sm:px-5 ${mode === "login" ? "bg-[#ffd23f] text-[#102f52] shadow-sm" : "text-[#315577] hover:bg-white"}`}>
-              Login Mode
-            </button>
-          </div>
-        </motion.nav>
-        <main className="mx-auto max-w-6xl py-10">{children}</main>
+    <footer className="px-4 pb-10 pt-6 sm:px-7 lg:px-10">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-1 border-t border-[var(--border)] pt-6 text-center text-sm text-[var(--ink-soft)] sm:flex-row sm:justify-center sm:gap-2">
+        <span>© 2026 Universitas Terbuka — English Department</span>
+        <span className="hidden sm:inline" aria-hidden="true">·</span>
+        <span>
+          Developed by{" "}
+          <a href="https://ardikardianto.github.io/resume" target="_blank" rel="noreferrer" className="font-medium text-[var(--accent)] hover:underline">Ardik Ardianto</a>
+        </span>
       </div>
+    </footer>
+  );
+}
+
+function BrandMark({ className = "h-[1.8rem] w-[1.8rem]" }) {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" className={className}>
+      <path d="M24 8L8 17.2L24 26.4L40 17.2L24 8Z" stroke="var(--gold)" />
+      <path d="M14 22.2V31.6C14 35.6 18.5 38.8 24 38.8C29.5 38.8 34 35.6 34 31.6V22.2" stroke="#fff" />
+      <path d="M40 17.2V29" stroke="#fff" />
+    </svg>
+  );
+}
+
+function PublicShell({ mode, setMode, children }) {
+  const links = [
+    { id: "landing", label: "Home" },
+    { id: "overview", label: "Overview" },
+    { id: "publications", label: "Publications" },
+    { id: "login", label: "Login" },
+  ];
+  return (
+    <div className="flex min-h-screen flex-col text-[var(--ink)]">
+      <motion.header
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="fixed inset-x-0 top-0 z-20 w-full border-b border-[var(--border)] bg-[color-mix(in_srgb,var(--paper)_88%,transparent)] px-[clamp(1rem,4vw,3rem)] backdrop-blur-[8px]"
+      >
+        <div className="mx-auto flex min-h-16 w-full max-w-[1120px] flex-col items-center justify-between gap-2 py-2.5 sm:flex-row sm:gap-3">
+          <button type="button" onClick={() => setMode("landing")} aria-label="Universitas Terbuka home" className="flex min-w-0 items-center gap-2.5">
+            <span className="flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-[11px] bg-[var(--accent)]">
+              <BrandMark />
+            </span>
+            <span className="grid gap-[0.12rem] text-left">
+              <strong className="display text-[1.3rem] font-semibold leading-none text-[var(--ink)] sm:text-[1.45rem]">Universitas Terbuka</strong>
+              <span className="text-[0.64rem] font-medium uppercase tracking-[0.18em] text-[var(--ink-muted)]">English Department</span>
+            </span>
+          </button>
+          <nav aria-label="Primary navigation" className="w-full sm:w-auto">
+            <ul className="flex items-center justify-center gap-0.5 sm:gap-1">
+              {links.map((link) => {
+                const active = mode === link.id;
+                return (
+                  <li key={link.id}>
+                    <button
+                      type="button"
+                      onClick={() => setMode(link.id)}
+                      aria-current={active ? "page" : undefined}
+                      className={`relative inline-flex min-h-[2.4rem] items-center justify-center rounded-lg px-2.5 text-[0.92rem] transition-colors sm:px-3.5 ${active ? "font-semibold text-[var(--ink)]" : "font-medium text-[var(--ink-muted)] hover:bg-[var(--surface-soft)] hover:text-[var(--ink)]"}`}
+                    >
+                      {link.label}
+                      {active && <span className="absolute inset-x-2.5 bottom-1.5 h-0.5 rounded-full bg-[var(--gold)] sm:inset-x-3.5" />}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+      </motion.header>
+      <div className="flex-1 px-4 sm:px-7 lg:px-10">
+        <main className="mx-auto max-w-6xl pb-10 pt-[7.5rem] sm:pt-24">{children}</main>
+      </div>
+      <Footer />
     </div>
   );
 }
@@ -1013,16 +1043,13 @@ function LandingPage({ setMode, publications }) {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         className="max-w-2xl"
       >
-        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Research Publications</p>
-        <h1 className="mt-6 text-5xl font-black leading-[0.95] tracking-tight text-[#102f52] sm:text-6xl lg:text-7xl">Department Research Publications</h1>
-        <p className="mt-7 max-w-xl text-lg leading-8 text-[#4f6478]">A focused dashboard for journal publications, authors, indexes, and research fields across the English Department.</p>
-        <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <Button variant="secondary" onClick={() => setMode("overview")} className="!rounded-2xl px-6 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
-          <Button variant="secondary" onClick={() => setMode("publications")} className="!rounded-2xl px-6 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
-          <button type="button" onClick={() => setMode("submit")} className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffd23f] px-6 py-3 text-base font-black text-[#102f52] shadow-sm transition hover:bg-[#f3c72f]">
-            <Icons.file className="h-5 w-5" />
-            Submit Article
-          </button>
+        <p className="eyebrow">Research Publications</p>
+        <h1 className="display mt-6 text-5xl leading-[1.02] text-[var(--ink)] sm:text-6xl">Department Research Publications</h1>
+        <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--ink-soft)]">A focused dashboard for journal publications, authors, indexes, and research fields across the English Department.</p>
+        <div className="mt-9 grid max-w-md grid-cols-2 gap-3">
+          <Button variant="secondary" onClick={() => setMode("overview")} className="w-full px-5 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
+          <Button variant="secondary" onClick={() => setMode("publications")} className="w-full px-5 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
+          <Button onClick={() => setMode("submit")} className="w-full px-5 py-3 text-base"><Icons.file className="h-5 w-5" />Submit Article</Button>
         </div>
       </motion.section>
 
@@ -1030,48 +1057,44 @@ function LandingPage({ setMode, publications }) {
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-[2rem] bg-[#f3f6f7] p-5 shadow-[0_28px_90px_rgba(16,47,82,0.10)] sm:p-7"
+        className="grid gap-4"
       >
-        <div className="grid gap-4">
-          <Card variant="neutral" className="p-5">
-            <h2 className="text-xl font-black text-[#102f52]">Five-year output trend</h2>
-            <p className="mt-2 text-sm font-semibold text-[#62757d]">Area fill fades at the left and right edges</p>
-            <div className="h-56">
-              <ResponsiveContainer>
-                <AreaChart data={trendData} margin={{ top: 34, right: 18, left: 18, bottom: 4 }}>
-                  <defs>
-                    <linearGradient id="landingTrendFill" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#55dceb" stopOpacity={0} />
-                      <stop offset="16%" stopColor="#55dceb" stopOpacity={0.26} />
-                      <stop offset="84%" stopColor="#55dceb" stopOpacity={0.26} />
-                      <stop offset="100%" stopColor="#55dceb" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid stroke="#d5dde4" strokeDasharray="7 9" vertical={false} />
-                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "#4f5961", fontSize: 13, fontWeight: 600 }} dy={10} />
-                  <YAxis hide domain={[0, "dataMax + 2"]} />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="publications" stroke="#55dceb" strokeWidth={3.5} fill="url(#landingTrendFill)" dot={false} activeDot={{ r: 5, fill: "#55dceb" }} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
+        <Card className="p-6">
+          <h2 className="display text-lg text-[var(--ink)]">Five-year output trend</h2>
+          <p className="mt-1 text-sm text-[var(--ink-soft)]">Publications recorded each year</p>
+          <div className="mt-3 h-56">
+            <ResponsiveContainer>
+              <AreaChart data={trendData} margin={{ top: 34, right: 18, left: 18, bottom: 4 }}>
+                <defs>
+                  <linearGradient id="landingTrendFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#005baa" stopOpacity={0.18} />
+                    <stop offset="100%" stopColor="#005baa" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="var(--border)" strokeDasharray="4 6" vertical={false} />
+                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "var(--ink-soft)", fontSize: 13 }} dy={10} />
+                <YAxis hide domain={[0, "dataMax + 2"]} />
+                <Tooltip />
+                <Area type="monotone" dataKey="publications" stroke="#005baa" strokeWidth={2.5} fill="url(#landingTrendFill)" dot={false} activeDot={{ r: 4, fill: "#005baa" }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
 
-          <Card variant="neutral" className="p-5">
-            <h2 className="mb-3 font-black text-[#102f52]">Publications by field</h2>
-            <div className="h-56">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={fieldData} dataKey="value" nameKey="name" innerRadius={48} outerRadius={78}>
-                    {fieldData.map((_, index) => <Cell key={index} fill={palette[index % palette.length]} />)}
-                  </Pie>
-                  <Tooltip />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </div>
+        <Card className="p-6">
+          <h2 className="display mb-3 text-lg text-[var(--ink)]">Publications by field</h2>
+          <div className="h-56">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie data={fieldData} dataKey="value" nameKey="name" innerRadius={48} outerRadius={78} paddingAngle={2} stroke="var(--surface)" strokeWidth={2}>
+                  {fieldData.map((_, index) => <Cell key={index} fill={palette[index % palette.length]} />)}
+                </Pie>
+                <Tooltip />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
       </motion.section>
     </div>
   );
@@ -1102,11 +1125,11 @@ function LoginPage({ setMode, onLogin }) {
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
-        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Restricted Access</p>
-        <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[0.95] tracking-tight text-[#102f52] sm:text-6xl lg:text-7xl">Research Admin Dashboard</h1>
-        <p className="mt-7 max-w-xl text-lg leading-8 text-[#4f6478]">Sign in to manage publication records, journal indexes, author data, and department research reporting.</p>
+        <p className="eyebrow">Restricted Access</p>
+        <h1 className="display mt-6 max-w-2xl text-5xl leading-[1.02] text-[var(--ink)] sm:text-6xl">Research Admin Dashboard</h1>
+        <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--ink-soft)]">Sign in to manage publication records, journal indexes, author data, and department research reporting.</p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-          <Button variant="secondary" onClick={() => setMode("landing")} aria-label="Home" title="Home" className="!h-12 !w-12 !rounded-2xl !px-0 !py-0"><Icons.home className="h-5 w-5" /></Button>
+          <Button variant="secondary" onClick={() => setMode("landing")} aria-label="Home" title="Home" className="!h-11 !w-11 !px-0 !py-0"><Icons.home className="h-5 w-5" /></Button>
         </div>
       </motion.section>
 
@@ -1116,36 +1139,32 @@ function LoginPage({ setMode, onLogin }) {
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         className="relative mx-auto w-full max-w-2xl lg:mx-0"
       >
-        <div className="absolute -left-8 top-8 hidden rounded-2xl border border-[#d7e6f7] bg-white px-5 py-4 shadow-[0_18px_50px_rgba(0,91,170,0.10)] lg:block">
-          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#c99800]">Admin only</p>
-          <p className="mt-1 text-lg font-black text-[#102f52]">Publication data</p>
-        </div>
-        <Card variant="neutral" className="relative z-10 ml-auto w-full rounded-[2rem] p-5 shadow-[0_28px_90px_rgba(0,91,170,0.10)] sm:p-7 lg:max-w-md lg:p-8">
-          <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#005baa]">Restricted access</p>
-          <h2 className="mt-2 text-3xl font-black tracking-tight text-[#102f52] sm:text-4xl">Sign in</h2>
-          <p className="mt-3 text-base leading-7 text-[#4f6478]">Welcome back! Please sign in to your account.</p>
+        <Card className="relative z-10 ml-auto w-full p-6 sm:p-8 lg:max-w-md">
+          <p className="eyebrow">Restricted access</p>
+          <h2 className="display mt-2 text-3xl text-[var(--ink)]">Sign in</h2>
+          <p className="mt-2 text-base leading-7 text-[var(--ink-soft)]">Welcome back. Please sign in to your account.</p>
 
           <form onSubmit={submit} className="mt-6 space-y-4">
             <label className="block">
-              <span className="mb-2 block text-sm font-black text-[#102f52]">Email</span>
-              <div className="flex h-12 items-center gap-3 rounded-xl border border-[#d7e6f7] bg-white px-3">
-                <Icons.users className="h-4 w-4 text-[#6f90af]" />
-                <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Email address" className="w-full bg-transparent text-sm text-[#102f52] outline-none placeholder:text-[#8aa0b6]" />
+              <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Email</span>
+              <div className="flex h-12 items-center gap-3 rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 transition-colors focus-within:border-[var(--accent)]">
+                <Icons.users className="h-4 w-4 text-[var(--ink-muted)]" />
+                <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Email address" className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-muted)]" />
               </div>
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-black text-[#102f52]">Password</span>
-              <div className="flex h-12 items-center gap-3 rounded-xl border border-[#d7e6f7] bg-white px-3">
-                <Icons.check className="h-4 w-4 text-[#6f90af]" />
-                <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" className="w-full bg-transparent text-sm text-[#102f52] outline-none placeholder:text-[#8aa0b6]" />
+              <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Password</span>
+              <div className="flex h-12 items-center gap-3 rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 transition-colors focus-within:border-[var(--accent)]">
+                <Icons.check className="h-4 w-4 text-[var(--ink-muted)]" />
+                <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-muted)]" />
               </div>
             </label>
-            <button type="button" onClick={() => { setEmail(DEMO_EMAIL); setPassword(DEMO_PASSWORD); setError(""); }} className="w-full rounded-2xl border border-[#d7e6f7] bg-[#eef5ff] px-4 py-3 text-sm font-black text-[#102f52] transition hover:bg-[#dcecff]">
+            <button type="button" onClick={() => { setEmail(DEMO_EMAIL); setPassword(DEMO_PASSWORD); setError(""); }} className="w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface-soft)] px-4 py-3 text-sm font-medium text-[var(--ink)] transition-colors hover:bg-[var(--accent-soft)]">
               Use demo account
             </button>
-            {error && <p className="rounded-xl bg-[#fde2e2] px-3 py-2 text-sm font-semibold text-[#8a3a3a]">{error}</p>}
-            <Button type="submit" className="w-full !rounded-2xl py-3 text-base" disabled={!email || !password || loading}>{loading ? "Signing in..." : "Sign in"}</Button>
-            <p className="rounded-2xl bg-[#f7fbff] px-4 py-3 text-xs font-semibold leading-5 text-[#4f6478]">
+            {error && <p className="rounded-lg bg-[#f5e6e3] px-3 py-2 text-sm font-medium text-[#9a4338]">{error}</p>}
+            <Button type="submit" className="w-full py-3 text-base" disabled={!email || !password || loading}>{loading ? "Signing in..." : "Sign in"}</Button>
+            <p className="rounded-lg bg-[var(--surface-soft)] px-4 py-3 text-xs leading-5 text-[var(--ink-soft)]">
               Demo: {DEMO_EMAIL} / {DEMO_PASSWORD}. Demo changes stay in this browser session and do not alter Supabase data.
             </p>
           </form>
@@ -1160,9 +1179,9 @@ function OverviewPage({ filteredPublications, setActive }) {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Research Overview</p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#102f52] sm:text-5xl">Department Research Publications</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4f6478]">A quick view of publication volume, authors, journal indexes, and research fields.</p>
+        <p className="eyebrow">Research Overview</p>
+        <h1 className="display mt-2 text-4xl text-[var(--ink)] sm:text-5xl">Department Research Publications</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-soft)]">A quick view of publication volume, authors, journal indexes, and research fields.</p>
       </div>
       <Dashboard filteredPublications={filteredPublications} setActive={setActive} actionLabel="View publications" />
     </div>
@@ -1186,11 +1205,11 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card variant="neutral" className="p-7">
+        <Card className="p-7">
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-black text-[#102f52]">Five-year output trend</h2>
-              <p className="mt-2 text-base font-semibold text-[#62757d]">Area fill fades at the left and right edges</p>
+              <h2 className="display text-xl text-[var(--ink)]">Five-year output trend</h2>
+              <p className="mt-1 text-sm text-[var(--ink-soft)]">Publications recorded each year</p>
             </div>
             <Button variant="secondary" onClick={() => setActive("publications")} className="shrink-0">{actionLabel}</Button>
           </div>
@@ -1198,42 +1217,40 @@ function Dashboard({ filteredPublications, setActive, actionLabel = "View public
             <ResponsiveContainer>
               <AreaChart data={trendData} margin={{ top: 42, right: 28, left: 28, bottom: 10 }}>
                 <defs>
-                  <linearGradient id="overviewTrendFill" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#55dceb" stopOpacity={0} />
-                    <stop offset="16%" stopColor="#55dceb" stopOpacity={0.3} />
-                    <stop offset="84%" stopColor="#55dceb" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#55dceb" stopOpacity={0} />
+                  <linearGradient id="overviewTrendFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#005baa" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="#005baa" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#d5dde4" strokeDasharray="7 9" vertical={false} />
-                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "#4f5961", fontSize: 15, fontWeight: 600 }} dy={12} />
+                <CartesianGrid stroke="var(--border)" strokeDasharray="4 6" vertical={false} />
+                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "var(--ink-soft)", fontSize: 14 }} dy={12} />
                 <YAxis hide domain={[0, "dataMax + 2"]} />
                 <Tooltip />
-                <Area type="monotone" dataKey="publications" name="Publications" stroke="#55dceb" strokeWidth={4} fill="url(#overviewTrendFill)" dot={false} activeDot={{ r: 5, fill: "#55dceb" }} />
+                <Area type="monotone" dataKey="publications" name="Publications" stroke="#005baa" strokeWidth={2.5} fill="url(#overviewTrendFill)" dot={false} activeDot={{ r: 4, fill: "#005baa" }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
-        <Card variant="neutral" className="p-5">
-          <h2 className="mb-4 font-black text-[#102f52]">Publications by field</h2>
+        <Card className="p-7">
+          <h2 className="display mb-4 text-xl text-[var(--ink)]">Publications by field</h2>
           <div className="h-80">
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={themeData} dataKey="value" nameKey="name" innerRadius={65} outerRadius={100}>
+                <Pie data={themeData} dataKey="value" nameKey="name" innerRadius={65} outerRadius={100} paddingAngle={2} stroke="var(--surface)" strokeWidth={2}>
                   {themeData.map((_, index) => <Cell key={index} fill={palette[index % palette.length]} />)}
                 </Pie>
                 <Tooltip />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: 13 }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </Card>
       </div>
 
-      <Card variant="lavender" className="p-5">
-        <h2 className="mb-2 font-black text-[#102f52]">Journal index bubbles</h2>
-        <p className="mb-4 text-sm text-[#4f6478]">National and international journals are the main anchors, with indexed categories clustered around each one.</p>
+      <Card className="p-7">
+        <h2 className="display text-xl text-[var(--ink)]">Journal index bubbles</h2>
+        <p className="mb-4 mt-1 text-sm text-[var(--ink-soft)]">National and international journals are the main anchors, with indexed categories clustered around each one.</p>
         <JournalBubbleChart publications={filteredPublications} />
       </Card>
     </div>
@@ -1255,19 +1272,19 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
     setSortKey(key);
   };
   const sortHeader = (label, key) => (
-    <button type="button" onClick={() => sortBy(key)} className="inline-flex items-center gap-1 font-black uppercase tracking-[0.16em] text-[#315577] hover:text-[#005baa]">
+    <button type="button" onClick={() => sortBy(key)} className="inline-flex items-center gap-1 font-medium uppercase tracking-[0.08em] text-[var(--ink-muted)] transition-colors hover:text-[var(--ink)]">
       {label}{sortKey === key && <span aria-hidden="true">{sortDirection === "asc" ? "↑" : "↓"}</span>}
     </button>
   );
 
   return (
-    <Card variant="neutral" className="mobile-card-table overflow-hidden">
-      <div className="p-5 pb-4">
-        <h1 className="text-2xl font-black text-[#102f52]">Publication pipeline</h1>
-        <p className="mt-1 text-sm text-[#4f6478]">Track journal outputs and indexing level.</p>
+    <Card className="mobile-card-table overflow-hidden">
+      <div className="border-b border-[var(--border)] p-6">
+        <h1 className="display text-xl text-[var(--ink)]">Publication pipeline</h1>
+        <p className="mt-1 text-sm text-[var(--ink-soft)]">Track journal outputs and indexing level.</p>
       </div>
       <div className="px-2 pb-3 sm:px-3 lg:px-4">
-        <div className="publication-table-shell overflow-x-auto rounded-2xl border border-[#d7e6f7]">
+        <div className="publication-table-shell overflow-x-auto">
           <table className="w-full table-fixed text-left text-sm">
             <colgroup>
               <col style={{ width: canManage ? "16%" : "20%" }} />
@@ -1278,39 +1295,39 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
               <col style={{ width: canManage ? "10%" : "9%" }} />
               <col style={{ width: canManage ? "15%" : "6%" }} />
             </colgroup>
-            <thead className="bg-[#f7fbff] text-[10px] uppercase tracking-[0.16em] text-[#315577]">
-              <tr>
-                <th className="px-3 py-4">{sortHeader("Authors", "authors")}</th>
-                <th className="px-3 py-4">{sortHeader("Title", "title")}</th>
-                <th className="px-3 py-4">{sortHeader("Journal", "journal")}</th>
-                <th className="px-3 py-4">{sortHeader("Field", "theme")}</th>
-                <th className="px-3 py-4">{sortHeader("Year", "year")}</th>
-                <th className="px-3 py-4">{sortHeader("Index", "index")}</th>
-                <th className="px-3 py-4 text-center font-black uppercase tracking-[0.16em] text-[#315577]">Action</th>
+            <thead className="text-[11px] uppercase tracking-[0.08em] text-[var(--ink-muted)]">
+              <tr className="border-b border-[var(--border)]">
+                <th className="px-3 py-3.5">{sortHeader("Authors", "authors")}</th>
+                <th className="px-3 py-3.5">{sortHeader("Title", "title")}</th>
+                <th className="px-3 py-3.5">{sortHeader("Journal", "journal")}</th>
+                <th className="px-3 py-3.5">{sortHeader("Field", "theme")}</th>
+                <th className="px-3 py-3.5">{sortHeader("Year", "year")}</th>
+                <th className="px-3 py-3.5">{sortHeader("Index", "index")}</th>
+                <th className="px-3 py-3.5 text-center font-medium uppercase tracking-[0.08em] text-[var(--ink-muted)]">Action</th>
               </tr>
             </thead>
             <tbody>
               {sortedItems.map((item) => (
-                <tr key={publicationIdentity(item)} className="border-t border-[#edf3f1]">
-                  <td className="break-words px-3 py-4 text-[#4f6478]">{item.authors}</td>
-                  <td className="break-words px-3 py-4 font-normal text-[#102f52]">{item.title}</td>
-                  <td className="break-words px-3 py-4 text-[#4f6478]">{item.venue}</td>
+                <tr key={publicationIdentity(item)} className="border-b border-[var(--border)] transition-colors last:border-0 hover:bg-[var(--surface-soft)]">
+                  <td className="break-words px-3 py-4 text-[var(--ink-soft)]">{item.authors}</td>
+                  <td className="break-words px-3 py-4 font-medium text-[var(--ink)]">{item.title}</td>
+                  <td className="break-words px-3 py-4 text-[var(--ink-soft)]">{item.venue}</td>
                   <td className="px-3 py-4"><Badge tone="blue">{item.theme}</Badge></td>
-                  <td className="px-3 py-4">{item.year}</td>
+                  <td className="px-3 py-4 text-[var(--ink-soft)]">{item.year}</td>
                   <td className="px-3 py-4"><Badge tone={indexTone(item.type)}>{item.type}</Badge></td>
                   <td className="px-3 py-4 text-right">
                     <div className="flex flex-nowrap justify-end gap-2">
                       {canManage && (
                         <>
-                          <button type="button" onClick={() => onEdit?.(item)} title="Edit" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`Edit publication: ${item.title}`}>
+                          <button type="button" onClick={() => onEdit?.(item)} title="Edit" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--accent)] transition-colors hover:bg-[var(--accent-soft)]" aria-label={`Edit publication: ${item.title}`}>
                             <Icons.edit className="h-4 w-4" />
                           </button>
-                          <button type="button" onClick={() => onDelete?.(item)} title="Delete" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#f3caca] bg-white text-[#8a3a3a] transition hover:bg-[#fde2e2]" aria-label={`Delete publication: ${item.title}`}>
+                          <button type="button" onClick={() => onDelete?.(item)} title="Delete" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#e4cfca] bg-[var(--surface)] text-[#9a4338] transition-colors hover:bg-[#f5e6e3]" aria-label={`Delete publication: ${item.title}`}>
                             <Icons.trash className="h-4 w-4" />
                           </button>
                         </>
                       )}
-                      <button type="button" onClick={() => onSee?.(item)} title="See" className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d7e6f7] bg-white text-[#005baa] transition hover:bg-[#eef5ff]" aria-label={`See publication: ${item.title}`}>
+                      <button type="button" onClick={() => onSee?.(item)} title="See" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--accent)] transition-colors hover:bg-[var(--accent-soft)]" aria-label={`See publication: ${item.title}`}>
                         <Icons.eye className="h-4 w-4" />
                       </button>
                     </div>
@@ -1321,7 +1338,7 @@ function Publications({ items, canManage = false, onEdit, onDelete, onSee }) {
           </table>
         </div>
       </div>
-      {!items.length && <p className="p-6 text-center text-sm text-[#4f6478]">No publications match the current filters.</p>}
+      {!items.length && <p className="p-6 text-center text-sm text-[var(--ink-soft)]">No publications match the current filters.</p>}
     </Card>
   );
 }
@@ -1331,9 +1348,9 @@ function PublicPublicationsPage({ items, onSee }) {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Publication Records</p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#102f52] sm:text-5xl">Publications</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4f6478]">Browse department journal outputs by authors, title, journal, field, year, and index.</p>
+        <p className="eyebrow">Publication Records</p>
+        <h1 className="display mt-2 text-4xl text-[var(--ink)] sm:text-5xl">Publications</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-soft)]">Browse department journal outputs by authors, title, journal, field, year, and index.</p>
       </div>
       <Publications items={items} onSee={onSee} />
     </div>
@@ -1344,11 +1361,11 @@ function PublicSubmissionPage({ onSubmit, message }) {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.35em] text-[#005baa]">Article Submission</p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#102f52] sm:text-5xl">Submit a publication</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4f6478]">Submitted records are reviewed by the admin before they appear in the public overview and publication data.</p>
+        <p className="eyebrow">Article Submission</p>
+        <h1 className="display mt-2 text-4xl text-[var(--ink)] sm:text-5xl">Submit a publication</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-soft)]">Submitted records are reviewed by the admin before they appear in the public overview and publication data.</p>
       </div>
-      <Card variant="neutral" className="p-5">
+      <Card className="p-6">
         <SubmissionForm onSubmit={onSubmit} message={message} />
       </Card>
     </div>
@@ -1661,16 +1678,16 @@ export default function ResearchDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-48 text-[#102f52] sm:pb-32">
+    <div className="min-h-screen pb-48 text-[var(--ink)] sm:pb-32">
       <main className="min-w-0 p-3 sm:p-6 lg:p-10">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-4 flex flex-wrap items-center justify-end gap-3">
+          <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
             <Badge tone="slate">{userEmail || "Preview mode"}</Badge>
             <Button variant="secondary" onClick={handleLogout}>{!userEmail || userEmail === "Preview mode" ? "Exit preview" : "Sign out"}</Button>
           </div>
           <Header active={active} />
           <div className="space-y-6">
-            {databaseMessage && <Card variant="sky" className="p-4"><p className="text-sm font-semibold text-[#315577]">{databaseMessage}</p></Card>}
+            {databaseMessage && <Card className="p-4"><p className="text-sm text-[var(--ink-soft)]">{databaseMessage}</p></Card>}
             {active === "publications" && <DashboardTools publications={publications} importMessage={importMessage} canManage={canManagePublications} onAddArticle={() => setArticleModal({ mode: "add" })} onExport={exportPublications} onImport={importPublications} onRequireLogin={() => setImportMessage("Please sign in before changing publication data.")} />}
             <Filters year={year} setYear={setYear} theme={theme} setTheme={setTheme} query={query} setQuery={setQuery} yearOptions={yearOptions} themeOptions={themeOptions} />
             <motion.div key={`${active}-${year}-${theme}-${query}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
@@ -1679,6 +1696,7 @@ export default function ResearchDashboard() {
           </div>
         </div>
       </main>
+      <Footer />
       <FloatingBottomNav active={active} setActive={setActive} onLogout={handleLogout} logoutLabel={!userEmail || userEmail === "Preview mode" ? "Exit preview" : "Logout"} />
       {articleModal?.mode === "add" && <Modal title="Add new article" onClose={() => setArticleModal(null)}><ArticleForm onSave={addArticle} onClose={() => setArticleModal(null)} /></Modal>}
       {articleModal?.mode === "edit" && <Modal title="Edit article" onClose={() => setArticleModal(null)}><ArticleForm initialArticle={articleModal.item} onSave={(article) => editArticle(articleModal.item, article)} onClose={() => setArticleModal(null)} submitLabel="Save changes" /></Modal>}
