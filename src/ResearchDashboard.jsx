@@ -1370,6 +1370,7 @@ export default function ResearchDashboard() {
   const [submissions, setSubmissions] = useState([]);
   const [articleModal, setArticleModal] = useState(null);
   const [viewArticle, setViewArticle] = useState(null);
+  const [confirmReview, setConfirmReview] = useState(null);
   const [importMessage, setImportMessage] = useState("");
   const [submissionMessage, setSubmissionMessage] = useState("");
   const [databaseMessage, setDatabaseMessage] = useState("Loading publications...");
@@ -1589,10 +1590,18 @@ export default function ResearchDashboard() {
     }
   };
 
+  const handleConfirmReview = async () => {
+    if (!confirmReview) return;
+    const { type, submission } = confirmReview;
+    setConfirmReview(null);
+    if (type === "approve") await approveSubmission(submission);
+    else await rejectSubmission(submission);
+  };
+
   const pages = {
     dashboard: <Dashboard filteredPublications={filteredPublications} setActive={setActive} />,
     publications: <Publications items={filteredPublications} canManage={canManagePublications} onEdit={(item) => setArticleModal({ mode: "edit", item })} onDelete={deleteArticle} onSee={setViewArticle} />,
-    submissions: <SubmissionReview submissions={submissions} onApprove={approveSubmission} onReject={rejectSubmission} onSee={setViewArticle} />,
+    submissions: <SubmissionReview submissions={submissions} onApprove={(item) => setConfirmReview({ type: "approve", submission: item })} onReject={(item) => setConfirmReview({ type: "reject", submission: item })} onSee={setViewArticle} />,
   };
 
   const exportPublications = async () => {
@@ -1691,6 +1700,27 @@ export default function ResearchDashboard() {
       {articleModal?.mode === "add" && <Modal title="Add new article" onClose={() => setArticleModal(null)}><ArticleForm onSave={addArticle} onClose={() => setArticleModal(null)} /></Modal>}
       {articleModal?.mode === "edit" && <Modal title="Edit article" onClose={() => setArticleModal(null)}><ArticleForm initialArticle={articleModal.item} onSave={(article) => editArticle(articleModal.item, article)} onClose={() => setArticleModal(null)} submitLabel="Save changes" /></Modal>}
       {viewArticle && <Modal title="Article details" onClose={() => setViewArticle(null)}><ArticleDetails article={viewArticle} onClose={() => setViewArticle(null)} /></Modal>}
+      {confirmReview && (
+        <Modal title={confirmReview.type === "approve" ? "Approve submission" : "Reject submission"} onClose={() => setConfirmReview(null)}>
+          <div className="space-y-5">
+            <p className="text-sm leading-6 text-[var(--ink-soft)]">
+              {confirmReview.type === "approve"
+                ? "This will publish the submission and add it to the public publication data. Are you sure you want to approve it?"
+                : "This will reject the submission and it will not appear in the public publication data. Are you sure you want to reject it?"}
+            </p>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
+              <p className="font-medium text-[var(--ink)]">{confirmReview.submission.title}</p>
+              <p className="mt-1 text-sm text-[var(--ink-soft)]">{confirmReview.submission.applicantName || "-"} · {confirmReview.submission.venue || "-"} · {confirmReview.submission.year}</p>
+            </div>
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button variant="secondary" onClick={() => setConfirmReview(null)}>Cancel</Button>
+              {confirmReview.type === "approve"
+                ? <Button onClick={handleConfirmReview}><Icons.check className="h-4 w-4" />Approve</Button>
+                : <Button onClick={handleConfirmReview}><Icons.x className="h-4 w-4" />Reject</Button>}
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
