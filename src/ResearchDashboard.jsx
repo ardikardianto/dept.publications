@@ -1024,7 +1024,7 @@ function LandingPage({ setMode, publications }) {
   const trendData = publicationTrendData(publications);
 
   return (
-    <div className="grid min-h-[calc(100vh-12rem)] items-center gap-10 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-16">
+    <div className="grid items-center gap-8 py-3 lg:grid-cols-[0.9fr_1.1fr] lg:py-4">
       <motion.section
         initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1034,10 +1034,12 @@ function LandingPage({ setMode, publications }) {
         <p className="eyebrow">Research Publications</p>
         <h1 className="display mt-6 text-5xl leading-[1.02] text-[var(--ink)] sm:text-6xl">Department Research Publications</h1>
         <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--ink-soft)]">A focused dashboard for journal publications, authors, indexes, and research fields across the English Department.</p>
-        <div className="mt-9 grid max-w-md grid-cols-2 gap-3">
-          <Button variant="secondary" onClick={() => setMode("overview")} className="w-full px-5 py-3 text-base"><Icons.chart className="h-5 w-5" />View Overview</Button>
-          <Button variant="secondary" onClick={() => setMode("publications")} className="w-full px-5 py-3 text-base"><Icons.book className="h-5 w-5" />Publications</Button>
-          <Button onClick={() => setMode("submit")} className="w-full px-5 py-3 text-base"><Icons.file className="h-5 w-5" />Submit Article</Button>
+        <div className="mt-9 flex flex-col items-start gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={() => setMode("overview")} className="whitespace-nowrap !gap-1.5 !px-3 !py-1.5 text-sm"><Icons.chart className="h-4 w-4 shrink-0" />View Overview</Button>
+            <Button variant="secondary" onClick={() => setMode("publications")} className="whitespace-nowrap !gap-1.5 !px-3 !py-1.5 text-sm"><Icons.book className="h-4 w-4 shrink-0" />Publications</Button>
+          </div>
+          <Button onClick={() => setMode("submit")} className="whitespace-nowrap !gap-1.5 !px-3 !py-1.5 text-sm"><Icons.file className="h-4 w-4 shrink-0" />Submit Article</Button>
         </div>
       </motion.section>
 
@@ -1045,12 +1047,12 @@ function LandingPage({ setMode, publications }) {
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="grid gap-4"
+        className="grid gap-3"
       >
-        <Card className="p-6">
+        <Card className="p-5">
           <h2 className="display text-lg text-[var(--ink)]">Five-year output trend</h2>
           <p className="mt-1 text-sm text-[var(--ink-soft)]">Publications recorded each year</p>
-          <div className="mt-3 h-56">
+          <div className="mt-3 h-44">
             <ResponsiveContainer>
               <AreaChart data={trendData} margin={{ top: 34, right: 18, left: 18, bottom: 4 }}>
                 <defs>
@@ -1069,9 +1071,9 @@ function LandingPage({ setMode, publications }) {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-5">
           <h2 className="display mb-3 text-lg text-[var(--ink)]">Publications by field</h2>
-          <div className="h-56">
+          <div className="h-44">
             <ResponsiveContainer>
               <PieChart>
                 <Pie data={fieldData} dataKey="value" nameKey="name" innerRadius={48} outerRadius={78} paddingAngle={2} stroke="var(--surface)" strokeWidth={2}>
