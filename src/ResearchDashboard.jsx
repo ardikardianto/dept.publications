@@ -966,16 +966,6 @@ function Footer() {
   );
 }
 
-function BrandMark({ className = "h-[1.8rem] w-[1.8rem]" }) {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" className={className}>
-      <path d="M24 8L8 17.2L24 26.4L40 17.2L24 8Z" stroke="var(--gold)" />
-      <path d="M14 22.2V31.6C14 35.6 18.5 38.8 24 38.8C29.5 38.8 34 35.6 34 31.6V22.2" stroke="#fff" />
-      <path d="M40 17.2V29" stroke="#fff" />
-    </svg>
-  );
-}
-
 function PublicShell({ mode, setMode, children }) {
   const links = [
     { id: "landing", label: "Home" },
@@ -993,9 +983,7 @@ function PublicShell({ mode, setMode, children }) {
       >
         <div className="mx-auto flex min-h-16 w-full max-w-[1120px] flex-col items-center justify-between gap-2 py-2.5 sm:flex-row sm:gap-3">
           <button type="button" onClick={() => setMode("landing")} aria-label="Universitas Terbuka home" className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-[11px] bg-[var(--accent)]">
-              <BrandMark />
-            </span>
+            <img src="/logo.png" alt="Universitas Terbuka logo" className="h-[2.6rem] w-[2.6rem] shrink-0 rounded-[11px] object-contain" />
             <span className="grid gap-[0.12rem] text-left">
               <strong className="display text-[1.3rem] font-semibold leading-none text-[var(--ink)] sm:text-[1.45rem]">Universitas Terbuka</strong>
               <span className="text-[0.64rem] font-medium uppercase tracking-[0.18em] text-[var(--ink-muted)]">English Department</span>
