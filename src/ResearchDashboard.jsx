@@ -1116,7 +1116,7 @@ function LoginPage({ setMode, onLogin }) {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
         <p className="eyebrow">Restricted Access</p>
-        <h1 className="display mt-6 max-w-2xl text-5xl leading-[1.02] text-[var(--ink)] sm:text-6xl">Research Admin Dashboard</h1>
+        <h1 className="display mt-6 max-w-2xl text-5xl leading-[1.02] text-[var(--ink)] sm:text-6xl">Research Dashboard</h1>
         <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--ink-soft)]">Sign in to manage publication records, journal indexes, author data, and department research reporting.</p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
           <Button variant="secondary" onClick={() => setMode("landing")} aria-label="Home" title="Home" className="!h-11 !w-11 !px-0 !py-0"><Icons.home className="h-5 w-5" /></Button>
